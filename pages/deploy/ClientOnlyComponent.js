@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import $ from 'jquery';
 
-const ClientOnlyComponent = () => {
+function ClientOnlyComponent(user) {
   const containerRef = useRef(null);
 
   useEffect(() => {

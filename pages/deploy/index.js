@@ -23,7 +23,7 @@ export default function Deploy() {
     return (
         <div>
             <h1>Deploy</h1>
-            <ClientOnlyComponent />
+            <ClientOnlyComponent user={session.user} />
         </div>
 
     );
