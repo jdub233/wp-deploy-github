@@ -14,9 +14,7 @@ export default NextAuth({
     callbacks: {
         async session({ session, token }) {
             // Check if the user is a collaborator based on the identity of the user's avatar image
-            const isCollaborator = await checkIsCollaborator(
-                session.user.image,
-            );
+            const isCollaborator = await checkIsCollaborator(session.user.image);
 
             // Add the collaborator status to the session
             session.isCollaborator = isCollaborator;
