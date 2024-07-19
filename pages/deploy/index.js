@@ -16,8 +16,8 @@ export default function Deploy() {
         }
     }, [session]); // Run the effect when `session` changes
 
-    if (!session) {
-        return <div>Not signed in</div>;
+    if (!session || !session.isCollaborator) {
+        return <div>Not signed in or not authorized.</div>;
     }
 
     return (
