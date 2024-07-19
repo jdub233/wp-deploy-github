@@ -19,6 +19,19 @@ function ClientOnlyComponent(user) {
         // Initialize jQuery or Backbone manipulation here
         $(containerRef.current).append('<p>Updated by jQuery</p>');
 
+
+        // Define an async function to fetch the envInstalls data.
+        async function fetchFiles() {
+          // Fetch data from the API of this Next.js app
+          const response = await fetch('/api/fetchFiles');
+          const data = await response.json();
+          // Set the global envInstall variable to the fetched data
+          window.envInstalls = data;
+        }
+
+        // Call the async function
+        fetchFiles().catch(console.error); // Catch and log any errors
+
       });
     }
   
