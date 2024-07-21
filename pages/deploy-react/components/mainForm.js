@@ -17,10 +17,17 @@ export default function MainForm() {
     useEffect(() => {
         // This code runs only on the client side
         if (typeof window !== "undefined") {
-            // Fetch environment installs
-            fetch("/api/fetchFiles")
-                .then(response => response.json())
-                .then(data => {setEnvInstalls(data)});
+            const fetchData = async () => {
+                try {
+                    const response = await fetch("/api/fetchFiles");
+                    const data = await response.json();
+                    setEnvInstalls(data);
+                } catch (error) {
+                    console.error("Failed to fetch environment installs:", error);
+                }
+            };
+    
+            fetchData();
         }
     }, []);
 
