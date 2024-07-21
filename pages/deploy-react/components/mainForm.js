@@ -10,7 +10,7 @@ export default function MainForm() {
 
 
     // Manifest state
-    const [workingManifest, setWorkingManifest] = useState({});
+    const [workingManifest, setWorkingManifest] = useState([]);
 
     useEffect(() => {
         // This code runs only on the client side
@@ -48,15 +48,15 @@ export default function MainForm() {
         console.log('hey install is now this:', newInstall);
     }
 
-    function getNewWorkingManifest(env, install) {
-        console.log('should fetch an ini file base on env and install');
-        console.log('env:', env, 'install:', install);
-        fetch(`/api/fetchIniFile?path=${env}/${install}.ini`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('data:', data);
-                setWorkingManifest(data)
-            });
+    async function getNewWorkingManifest(env, install) {
+        try {
+            const response = await fetch(`/api/fetchIniFile?path=${env}/${install}.ini`);
+            const data = await response.json();
+            console.log('data:', data);
+            setWorkingManifest(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     }
 
     return (
