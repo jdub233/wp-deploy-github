@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import ManifestList from './mainForm/manifestList';
+
 export default function MainForm() {
     // Track the overall installs available in the manifest repo.
     const [envInstalls, setEnvInstalls] = useState([]);
@@ -149,11 +151,10 @@ export default function MainForm() {
                     </fieldset>
                 </fieldset>
             </form>
-            <div className="tempDisplay">
-                <p>Environment: {env}</p>
-                <p>Install: {install}</p>
-                {workingManifest && <pre>{JSON.stringify(workingManifest, null, 2)}</pre>}
-            </div>
+            <ManifestList
+                workingManifest={workingManifest}
+                setWorkingManifest={setWorkingManifest}
+            />
         </div>
     );
 }
