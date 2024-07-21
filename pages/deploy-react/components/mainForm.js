@@ -22,26 +22,30 @@ export default function MainForm() {
         }
     }, []);
 
-    const handleEnvChange = (e) => {
-        setEnv(e.target.value);
+    const handleEnvChange = (event) => {
+        // Get the new environment value and update the state.
+        const { target: { value: newEnv } } = event;
+        setEnv(newEnv);
 
         // If there are both an env and install, then fetch to corresponding ini file.
         if (install) {
-            getNewWorkingManifest(env, install);
+            getNewWorkingManifest(newEnv, install);
         }
 
-        console.log('hey env is now this:', e.target.value);
+        console.log('hey env is now this:', newEnv);
     };
 
-    const handleInstallChange = (e) => {
-        setInstall(e.target.value);
+    const handleInstallChange = (event) => {
+        // Get the new install value and update the state.
+        const { target: { value: newInstall } } = event;
+        setInstall(newInstall);
 
         // If there are both an env and install, then fetch to corresponding ini file.
         if (env) {
-            getNewWorkingManifest(env, install);
+            getNewWorkingManifest(env, newInstall);
         }
 
-        console.log('hey install is now this:', e.target.value);
+        console.log('hey install is now this:', newInstall);
     }
 
     function getNewWorkingManifest(env, install) {
