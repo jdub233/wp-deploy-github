@@ -14,14 +14,30 @@ export default function MainForm() {
     // Manifest state
     const [workingManifest, setWorkingManifest] = useState([]);
 
+    // Reference manifests (prod and devl)
+    const [prodManifest, setProdManifest] = useState([]);
+    const [devlManifest, setDevlManifest] = useState([]);
+
     useEffect(() => {
         // This code runs only on the client side
         if (typeof window !== "undefined") {
             const fetchData = async () => {
                 try {
-                    const response = await fetch("/api/fetchFiles");
-                    const data = await response.json();
-                    setEnvInstalls(data);
+                    // Fetch the environment installs from the API
+                    const envResponse = await fetch("/api/fetchFiles");
+                    const envData = await envResponse.json();
+                    setEnvInstalls(envData);
+
+                    // Fetch the prod manifest
+                    const prodResponse = await fetch("/api/fetchIniFile?path=prod/cms.ini");
+                    const prodData = await prodResponse.json();
+                    setProdManifest(prodData);
+
+                    // Fetch the devl manifest
+                    const devlResponse = await fetch("/api/fetchIniFile?path=devl/cms.ini");
+                    const devlData = await devlResponse.json();
+                    setDevlManifest(devlData);
+
                 } catch (error) {
                     console.error("Failed to fetch environment installs:", error);
                 }
