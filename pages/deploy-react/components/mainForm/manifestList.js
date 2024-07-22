@@ -1,4 +1,5 @@
 import Package from "./manifestList/package";
+import ManifestListUIControls from "./manifestList/manifestListUIControls";
 
 export default function ManifestList({
     workingManifest,
@@ -60,6 +61,7 @@ export default function ManifestList({
                                     id="go-add-new-package">Add package</button>
                             </div>
                         </div>
+                        {workingManifest.length > 0 && <ManifestListUIControls />}
                     </div>
                 </div>
             </fieldset>
