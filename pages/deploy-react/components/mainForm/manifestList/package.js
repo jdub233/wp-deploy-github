@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
 
 export default function Package({
     manifestItem,
@@ -12,19 +13,55 @@ export default function Package({
     
     const [starred, setStarred] = useState(false);
 
+    const [repoTags, setRepoTags] = useState([]);
+
+    const [referenceProdPackage, setReferenceProdPackage] = useState({});
+
+    useEffect(() => {
+        if(typeof window !== "undefined") {
+            const findReferenceProdPackage = () => {
+                setReferenceProdPackage(prodManifest.find((prodPackage) => prodPackage.id === manifestItem.id));
+            };
+            findReferenceProdPackage();
+        }
+    }, [prodManifest, manifestItem]);
+
     // Handler method to toggle the expanded state
-    const toggleExpand = () => {
-        setExpanded(!expanded);
+    const toggleExpand = async () => {
+        if (typeof window !== "undefined") {
+
+            setExpanded(!expanded);
+
+            // If the package is being expanded and repoTags is empty, then fetch the tags for the repo.
+            if (!expanded && repoTags.length === 0) {
+                const fetchTags = async () => {
+                    try {
+                        // The source values stores the full repo location starting with git@github.com/ and ending with .git, so wee need to remove those before querying the API.
+                        const repo = manifestItem.source.replace('git@github.com:', '').replace('.git', '');
+
+                        const response = await fetch(`/api/fetchTags?repo=${repo}`);
+                        const data = await response.json();
+                        setRepoTags(data);
+                        console.log(data);
+                    } catch (error) {
+                        console.error('Failed to fetch tags:', error);
+                    }
+                };
+            
+                fetchTags();
+            }
+        }
     };
 
     // Handler method to toggle the starred state, should store results in cookie or local storage
     const toggleStar = () => {
         setStarred(!starred);
     };
-    
-    // Find the matching prod package by ID
-    const referenceProdPackage = prodManifest.find((prodPackage) => prodPackage.id === manifestItem.id);
 
+    // If the manifestItem is not defined, return null
+    if ( !manifestItem ) {
+        return null;
+    }
 
     return (
         <div className={`package-listing ${ !referenceProdPackage || (referenceProdPackage.rev !== manifestItem.rev) ? 'old-version' : 'current-version'}`}>
@@ -58,7 +95,23 @@ export default function Package({
                 </div>
                 <div className="refspec-line">
                     <span className="info-label">Refspec:</span>
-                    <input type="text" className="current-refspec" value={manifestItem.refspec} />
+                            <input type="text" className="current-refspec" value={manifestItem.refspec} />
+                    <Popover 
+                        placement='right'
+                    >
+                        <PopoverTrigger>
+                            <span className="info-icon">&#9432;</span>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                            <h4>Tags</h4>
+                            <ul>
+                                {repoTags.map((tag, index) => (
+                                    <li key={index}>{tag}</li>
+                                ))}
+                            </ul>
+
+                        </PopoverContent>
+                    </Popover>
                 </div>
                 <div>
                     <span className="info-label">Rev:</span>
