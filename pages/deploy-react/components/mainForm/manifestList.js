@@ -8,6 +8,13 @@ export default function ManifestList({
     prodManifest,
     devlManifest,
 }) {
+
+    function manifestNotEmpty(workingManifest) {
+        if (typeof window !== "undefined") {
+            return workingManifest.length > 0;
+        }
+    }
+
     return (
         <>
             <fieldset>
@@ -18,16 +25,16 @@ export default function ManifestList({
                 <div className="boxy manifest-packages-outer cf" style={{ position: "relative" }}>
                     <div style={{ clear: "both" }}>
                         <div className="notifications-wrapper">notify</div>
-                        { workingManifest.length == 0 && <div className="select-env-message">
+                        { !manifestNotEmpty(workingManifest) && <div className="select-env-message">
                             <h3>Select an environment &amp; a build...</h3>
                         </div> }
                     </div>
                     <div id="manifest-list-app" className="clearfix">
                         <div id="manifest-list-results-overlay">&nbsp;</div>
                         <div className="manifest-results-wrapper">
-                            { workingManifest.length > 0 && <h3 className="working-manifest-title">Working manifest</h3>}
+                            { manifestNotEmpty(workingManifest) && <h3 className="working-manifest-title">Working manifest</h3>}
                             <div id="manifest-list-results">
-                                { workingManifest.length > 0 && workingManifest.map((manifestItem, index) => (
+                                { manifestNotEmpty(workingManifest) && workingManifest.map((manifestItem, index) => (
                                     <Package
                                         key={index}
                                         manifestItem={manifestItem}
@@ -61,7 +68,7 @@ export default function ManifestList({
                                     id="go-add-new-package">Add package</button>
                             </div>
                         </div>
-                        {workingManifest.length > 0 && <ManifestListUIControls />}
+                        {manifestNotEmpty(workingManifest) && <ManifestListUIControls />}
                     </div>
                 </div>
             </fieldset>
