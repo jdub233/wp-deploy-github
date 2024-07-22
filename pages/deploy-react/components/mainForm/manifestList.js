@@ -18,9 +18,7 @@ export default function ManifestList({ workingManifest, setWorkingManifest }) {
                     <div id="manifest-list-app" className="clearfix">
                         <div id="manifest-list-results-overlay">&nbsp;</div>
                         <div className="manifest-results-wrapper">
-                            <h3 className="working-manifest-title">
-                                <span className="current-manifest-name">Working</span> manifest
-                            </h3>
+                            { workingManifest.length > 0 && <h3 className="working-manifest-title">Working manifest</h3>}
                             <div id="manifest-list-results">
                                 {workingManifest.map((manifestItem, index) => (
                                     <Package
