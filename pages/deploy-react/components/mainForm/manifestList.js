@@ -26,7 +26,7 @@ export default function ManifestList({
                         <div className="manifest-results-wrapper">
                             { workingManifest.length > 0 && <h3 className="working-manifest-title">Working manifest</h3>}
                             <div id="manifest-list-results">
-                                {workingManifest.map((manifestItem, index) => (
+                                { workingManifest.length > 0 && workingManifest.map((manifestItem, index) => (
                                     <Package
                                         key={index}
                                         manifestItem={manifestItem}
