@@ -15,7 +15,7 @@ export default function Deploy() {
         <>
             <Header />
             <div id="main" role="main">
-                <div className="container">
+                <div className="container" style={{marginLeft: '2em'}}>
                     <div className="left">
                         <div className="title">
                             <h1><span className="icon">&#xe000;</span> Build</h1>
