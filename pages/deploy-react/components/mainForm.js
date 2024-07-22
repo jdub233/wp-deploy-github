@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import ManifestList from './mainForm/manifestList';
+import CommitMessage from './mainForm/commitMessage';
 
 export default function MainForm() {
     // Track the overall installs available in the manifest repo.
@@ -202,14 +203,15 @@ export default function MainForm() {
                         }
                     </fieldset>
                 </fieldset>
+                <ManifestList
+                    workingManifest={workingManifest}
+                    setWorkingManifest={setWorkingManifest}
+                    loadedManifest={loadedManifest}
+                    prodManifest={prodManifest}
+                    devlManifest={devlManifest}
+                />
+                <CommitMessage />
             </form>
-            <ManifestList
-                workingManifest={workingManifest}
-                setWorkingManifest={setWorkingManifest}
-                loadedManifest={loadedManifest}
-                prodManifest={prodManifest}
-                devlManifest={devlManifest}
-            />
         </div>
     );
 }
