@@ -14,9 +14,10 @@ export default function MainForm() {
     // Manifest state
     const [workingManifest, setWorkingManifest] = useState([]);
 
-    // Reference manifests (prod and devl)
+    // Reference manifests (prod, devl, and a copy of the working manifest as it was originally loaded).
     const [prodManifest, setProdManifest] = useState([]);
     const [devlManifest, setDevlManifest] = useState([]);
+    const [loadedManifest, setLoadedManifest] = useState([]);
 
     useEffect(() => {
         // This code runs only on the client side
@@ -79,6 +80,10 @@ export default function MainForm() {
             const data = await response.json();
             console.log('data:', data);
             setWorkingManifest(data);
+
+            // Set the loaded manifest to a copy of the working manifest now, before it is mutated.
+            setLoadedManifest(JSON.parse(JSON.stringify(data)));
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -177,6 +182,9 @@ export default function MainForm() {
             <ManifestList
                 workingManifest={workingManifest}
                 setWorkingManifest={setWorkingManifest}
+                loadedManifest={loadedManifest}
+                prodManifest={prodManifest}
+                devlManifest={devlManifest}
             />
         </div>
     );

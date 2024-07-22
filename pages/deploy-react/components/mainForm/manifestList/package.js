@@ -1,6 +1,13 @@
 import { useState } from 'react';
 
-export default function Package({ manifestItem, index, workingManifest, setWorkingManifest }) {
+export default function Package({
+    manifestItem,
+    index,
+    workingManifest,
+    setWorkingManifest,
+    prodManifest,
+    devlManifest,
+}) {
     const [expanded, setExpanded] = useState(false);
     
     const [starred, setStarred] = useState(false);
@@ -15,8 +22,12 @@ export default function Package({ manifestItem, index, workingManifest, setWorki
         setStarred(!starred);
     };
     
+    // Find the matching prod package by ID
+    const referenceProdPackage = prodManifest.find((prodPackage) => prodPackage.id === manifestItem.id);
+
+
     return (
-        <div className="package-listing current-version">
+        <div className={`package-listing ${ !referenceProdPackage || (referenceProdPackage.rev !== manifestItem.rev) ? 'old-version' : 'current-version'}`}>
             <div className="summary-info cf">
                 <div className="img layout"></div>
                 <div className="center-content layout">

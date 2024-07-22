@@ -1,6 +1,12 @@
 import Package from "./manifestList/package";
 
-export default function ManifestList({ workingManifest, setWorkingManifest }) {
+export default function ManifestList({
+    workingManifest,
+    setWorkingManifest,
+    loadedManifest,
+    prodManifest,
+    devlManifest,
+}) {
     return (
         <>
             <fieldset>
@@ -27,6 +33,8 @@ export default function ManifestList({ workingManifest, setWorkingManifest }) {
                                         index={index}
                                         workingManifest={workingManifest}
                                         setWorkingManifest={setWorkingManifest}
+                                        prodManifest={prodManifest}
+                                        devlManifest={devlManifest}
                                     />
                                 ))}
                             </div>
