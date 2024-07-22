@@ -9,6 +9,7 @@ export default function MainForm() {
     // UI Components
     const [env, setEnv] = useState("");
     const [install, setInstall] = useState("");
+    const [sandbox, setSandbox] = useState("");
 
 
     // Manifest state
@@ -54,7 +55,7 @@ export default function MainForm() {
         setEnv(newEnv);
 
         // If there are both an env and install, then fetch to corresponding ini file.
-        if (install) {
+        if (install && (install !== "sandbox" || sandbox)) {
             getNewWorkingManifest(newEnv, install);
         }
 
@@ -67,12 +68,25 @@ export default function MainForm() {
         setInstall(newInstall);
 
         // If there are both an env and install, then fetch to corresponding ini file.
-        if (env) {
+        if (env && newInstall != "sandbox") {
             getNewWorkingManifest(env, newInstall);
         }
 
         console.log('hey install is now this:', newInstall);
     }
+
+    const handleSandboxChange = (event) => {
+        // Get the new sandbox value and update the state.
+        const { target: { value: newSandbox } } = event;
+        setSandbox(newSandbox);
+
+        // If there are both an env and install, then fetch to corresponding ini file.
+        if (env && install === "sandbox") {
+            getNewWorkingManifest(env, newSandbox);
+        }
+
+        console.log('hey sandbox is now this:', newSandbox);
+    };
 
     async function getNewWorkingManifest(env, install) {
         try {
@@ -171,11 +185,21 @@ export default function MainForm() {
                                 <label htmlFor="build_inst_sandbox">Sandbox</label>
                             </li>
                         </ul>
-                        <div id="build_sandbox" className="sandbox-chooser additional-container">
-                            <label htmlFor="sandbox_id_select">Select sandbox:</label>
-                            <input type="text" name="sandbox_id_new" id="sandbox_id_new"
-                                className="sandbox-select input-text" data-selected_install="" />
-                        </div>
+
+                        {(install === "sandbox" && env ) && 
+                            <div id="build_sandbox" className="sandbox-chooser additional-container">
+                                <label htmlFor="sandbox_id_select">Select sandbox:</label>
+                                <select type="text" name="sandbox_id_new" id="sandbox_id_new"
+                                    className="sandbox-select input-text"
+                                    onChange={handleSandboxChange}
+                                >
+                                    <option value="" disabled selected hidden>Select a sandbox</option>
+                                    { envInstalls[env].filter(sandbox => sandbox !== "cms" && sandbox !== "blogs").map((sandbox, index) => (
+                                        <option key={index} value={sandbox}>{sandbox}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        }
                     </fieldset>
                 </fieldset>
             </form>
