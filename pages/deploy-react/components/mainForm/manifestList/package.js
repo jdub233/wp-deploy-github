@@ -33,7 +33,8 @@ export default function Package({
             setExpanded(!expanded);
 
             // If the package is being expanded and repoTags is empty, then fetch the tags for the repo.
-            if (!expanded && repoTags.length === 0) {
+            // And only do this if the scm is git.
+            if (!expanded && repoTags.length === 0 && manifestItem.scm === 'git') {
                 const fetchTags = async () => {
                     try {
                         // The source values stores the full repo location starting with git@github.com/ and ending with .git, so wee need to remove those before querying the API.
@@ -85,7 +86,7 @@ export default function Package({
                 <div>
                     <span className="info-label">SCM:</span> 
                     <label>
-                        <input type="radio" class="scm-radio scm-svn" name={`scm-radio-${manifestItem.id}`} value="svn" checked={manifestItem == 'svn'} />
+                        <input type="radio" class="scm-radio scm-svn" name={`scm-radio-${manifestItem.id}`} value="svn" checked={manifestItem.scm == 'svn'} />
                         SVN
                     </label>
                     <label>
@@ -93,26 +94,30 @@ export default function Package({
                         GIT
                     </label>
                 </div>
-                <div className="refspec-line">
-                    <span className="info-label">Refspec:</span>
-                            <input type="text" className="current-refspec" value={manifestItem.refspec} />
-                    <Popover 
-                        placement='right'
-                    >
-                        <PopoverTrigger>
-                            <span className="info-icon">&#9432;</span>
-                        </PopoverTrigger>
-                        <PopoverContent>
-                            <h4>Tags</h4>
-                            <ul>
-                                {repoTags.map((tag, index) => (
-                                    <li key={index}>{tag}</li>
-                                ))}
-                            </ul>
+                { manifestItem.scm === 'git' && 
+                    <div className="refspec-line">
+                        <span className="info-label">Refspec:</span>
+                                <input type="text" className="current-refspec" value={manifestItem.refspec} />
+                        {  repoTags.length > 0 &&
+                            <Popover 
+                                placement='right'
+                            >
+                                <PopoverTrigger>
+                                    <span className="info-icon">&#9432;</span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                    <h4>Tags</h4>
+                                    <ul>
+                                        {repoTags.map((tag, index) => (
+                                            <li key={index}>{tag}</li>
+                                        ))}
+                                    </ul>
 
-                        </PopoverContent>
-                    </Popover>
-                </div>
+                                </PopoverContent>
+                            </Popover>
+                        }
+                    </div>
+                }
                 <div>
                     <span className="info-label">Rev:</span>
                     <input type="text" className="current-rev" value={manifestItem.rev} /> 
