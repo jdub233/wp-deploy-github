@@ -38,7 +38,6 @@ export default function ManifestList({
                                     <Package
                                         key={index}
                                         manifestItem={manifestItem}
-                                        workingManifest={workingManifest}
                                         setWorkingManifest={setWorkingManifest}
                                         prodManifest={prodManifest}
                                         devlManifest={devlManifest}
