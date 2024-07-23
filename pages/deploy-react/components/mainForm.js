@@ -61,8 +61,6 @@ export default function MainForm() {
         if (install && (install !== "sandbox" || sandbox)) {
             getNewWorkingManifest(newEnv, install);
         }
-
-        console.log('hey env is now this:', newEnv);
     };
 
     const handleInstallChange = (event) => {
