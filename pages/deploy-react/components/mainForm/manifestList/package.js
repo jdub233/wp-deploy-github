@@ -25,6 +25,50 @@ export default function Package({
         }
     }, [prodManifest, manifestItem]);
 
+    // Function to update the manifest item in the working manifest.
+    // It works by making a new copy of the working manifest, changing out the one item that needs to be updated.
+    function updateManifestItem(updatedItem) {
+        // This method of maintaining immutability should work well for data set of a few hundred items.
+        setWorkingManifest(currentManifest =>
+            currentManifest.map(item =>
+            item.id === updatedItem.id ? { ...item, ...updatedItem } : item // Not sure why the original code uses ...item to spread the orignial properties of the item
+        ));
+    }
+
+    // For radio buttons (SCM selection)
+    function handleSCMChange(event) {
+        const { value } = event.target;
+        const updatedItem = { ...manifestItem, scm: value };
+        updateManifestItem(updatedItem);
+    }
+
+    function handleRefSpecChange(event) {
+        const { target: { value } } = event;
+        const updatedItem = { ...manifestItem, refspec: value };
+        updateManifestItem(updatedItem);
+    }
+
+    // For Rev input
+    function handleRevChange(event) {
+        const { target: { value } } = event;
+        const updatedItem = { ...manifestItem, rev: value };
+        updateManifestItem(updatedItem);
+    }
+
+    // For Source input
+    function handleSourceChange(event) {
+        const { target: { value } } = event;
+        const updatedItem = { ...manifestItem, source: value };
+        updateManifestItem(updatedItem);
+    }
+
+    // For Destination input
+    function handleDestinationChange(event) {
+        const { target: { value } } = event;
+        const updatedItem = { ...manifestItem, dest: value };
+        updateManifestItem(updatedItem);
+    }
+    
     // Handler method to toggle the expanded state
     const toggleExpand = async () => {
         if (typeof window !== "undefined") {
@@ -85,18 +129,18 @@ export default function Package({
                 <div>
                     <span className="info-label">SCM:</span> 
                     <label>
-                        <input type="radio" class="scm-radio scm-svn" name={`scm-radio-${manifestItem.id}`} value="svn" checked={manifestItem.scm == 'svn'} />
+                        <input type="radio" onChange={handleSCMChange} class="scm-radio scm-svn" name={`scm-radio-${manifestItem.id}`} value="svn" checked={manifestItem.scm == 'svn'} />
                         SVN
                     </label>
                     <label>
-                        <input type="radio" class="scm-radio scm-git" name={`scm-radio-${manifestItem.id}`} value="git" checked={manifestItem.scm == 'git'} /> 
+                        <input type="radio" onChange={handleSCMChange} class="scm-radio scm-git" name={`scm-radio-${manifestItem.id}`} value="git" checked={manifestItem.scm == 'git'} /> 
                         GIT
                     </label>
                 </div>
                 { manifestItem.scm === 'git' && 
                     <div className="refspec-line">
                         <span className="info-label">Refspec:</span>
-                                <input type="text" className="current-refspec" value={manifestItem.refspec} />
+                                <input type="text" onChange={handleRefSpecChange} className="current-refspec" value={manifestItem.refspec} />
                         {  repoTags.length > 0 &&
                             <Popover 
                                 placement='right'
@@ -119,16 +163,16 @@ export default function Package({
                 }
                 <div>
                     <span className="info-label">Rev:</span>
-                    <input type="text" className="current-rev" value={manifestItem.rev} /> 
+                    <input type="text" onChange={handleRevChange} className="current-rev" value={manifestItem.rev} /> 
                     <span className="set-one-rev-to-prod">set to prod</span>
                 </div>
                 <div>
                     <span className="info-label">Source:</span>
-                    <input type="text" class="current-source" value={manifestItem.source} />
+                    <input type="text" onChange={handleSourceChange} class="current-source" value={manifestItem.source} />
                 </div>
                 <div>
                     <span className="info-label">Destination:</span>
-                    <input type="text" className="current-dest" value={manifestItem.dest} />
+                    <input type="text" onChange={handleDestinationChange} className="current-dest" value={manifestItem.dest} />
                 </div>
                 <div className="remove-package"><span class="do-remove">remove package</span></div>
             </div>
