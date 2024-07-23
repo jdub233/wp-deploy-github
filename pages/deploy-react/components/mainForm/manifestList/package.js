@@ -125,7 +125,12 @@ export default function Package({
                 <div className="img layout"></div>
                 <div className="center-content layout">
                     <h3>{manifestItem.id}</h3>
-                    <p className="pkg-details">{manifestItem.rev.substr(0,6)}</p>
+                    <p className="pkg-details">
+                        {manifestItem.rev.substr(0,6)}
+                        { referenceProdPackage && referenceProdPackage.rev && referenceProdPackage.rev !== manifestItem.rev && 
+                            ` (Prod: ${referenceProdPackage.rev.substr(0,6)} )`
+                        }
+                    </p>
                 </div>
                 <div className="expand-arrow layout" onClick={toggleExpand}>
                     {!expanded && <span className="collapsed">&#x25C0;</span>}
