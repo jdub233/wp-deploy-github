@@ -210,7 +210,9 @@ export default function MainForm() {
                     prodManifest={prodManifest}
                     devlManifest={devlManifest}
                 />
-                <CommitMessage />
+                <fieldset className="optional">
+                    <CommitMessage />
+                </fieldset>
             </form>
         </div>
     );
