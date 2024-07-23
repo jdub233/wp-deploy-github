@@ -128,11 +128,11 @@ export default function Package({
                 <div>
                     <span className="info-label">SCM:</span> 
                     <label>
-                        <input type="radio" onChange={handleSCMChange} class="scm-radio scm-svn" name={`scm-radio-${manifestItem.id}`} value="svn" checked={manifestItem.scm == 'svn'} />
+                        <input type="radio" onChange={handleSCMChange} className="scm-radio scm-svn" name={`scm-radio-${manifestItem.id}`} value="svn" checked={manifestItem.scm == 'svn'} />
                         SVN
                     </label>
                     <label>
-                        <input type="radio" onChange={handleSCMChange} class="scm-radio scm-git" name={`scm-radio-${manifestItem.id}`} value="git" checked={manifestItem.scm == 'git'} /> 
+                        <input type="radio" onChange={handleSCMChange} className="scm-radio scm-git" name={`scm-radio-${manifestItem.id}`} value="git" checked={manifestItem.scm == 'git'} /> 
                         GIT
                     </label>
                 </div>
@@ -167,13 +167,13 @@ export default function Package({
                 </div>
                 <div>
                     <span className="info-label">Source:</span>
-                    <input type="text" onChange={handleSourceChange} class="current-source" value={manifestItem.source} />
+                    <input type="text" onChange={handleSourceChange} className="current-source" value={manifestItem.source} />
                 </div>
                 <div>
                     <span className="info-label">Destination:</span>
                     <input type="text" onChange={handleDestinationChange} className="current-dest" value={manifestItem.dest} />
                 </div>
-                <div className="remove-package"><span class="do-remove">remove package</span></div>
+                <div className="remove-package"><span className="do-remove">remove package</span></div>
             </div>
         </div>
     );
