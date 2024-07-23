@@ -107,6 +107,13 @@ export default function Package({
         updateManifestItem(updatedItem);
     }
 
+    // Removes the current package from the working manifest.
+    function removePackage() {
+        setWorkingManifest(currentManifest =>
+            currentManifest.filter(item => item.id !== manifestItem.id)
+        );
+    }
+
     // If the manifestItem is not defined, return null
     if ( !manifestItem ) {
         return null;
@@ -181,7 +188,7 @@ export default function Package({
                     <span className="info-label">Destination:</span>
                     <input type="text" onChange={handleDestinationChange} className="current-dest" value={manifestItem.dest} />
                 </div>
-                <div className="remove-package"><span className="do-remove">remove package</span></div>
+                <div className="remove-package" onClick={removePackage}><span className="do-remove">remove package</span></div>
             </div>
         </div>
     );
