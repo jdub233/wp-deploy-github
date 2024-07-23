@@ -3,7 +3,6 @@ import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
 
 export default function Package({
     manifestItem,
-    index,
     workingManifest,
     setWorkingManifest,
     prodManifest,
