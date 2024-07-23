@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import { compareManifests } from "../lib/compareManifests";
+
 import ManifestList from './mainForm/manifestList';
 import CommitMessage from './mainForm/commitMessage';
 
@@ -102,6 +104,16 @@ export default function MainForm() {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+    }
+
+    function handleValidate(event) {
+        event.preventDefault();
+
+        // Compare the loaded manifest to the working manifest to determine what has changed.
+        const comparison = compareManifests(loadedManifest, workingManifest);
+        console.log('comparison:', comparison);
+
+       
     }
 
     return (
@@ -213,6 +225,11 @@ export default function MainForm() {
                 <fieldset className="optional">
                     <CommitMessage />
                 </fieldset>
+                <div className="confimation_modal">
+                    <div className="button-row">
+                        <button id="task_confirm_button" onClick={handleValidate} className="button primary show-modal">Validate</button>
+                    </div>
+                </div>
             </form>
         </div>
     );
