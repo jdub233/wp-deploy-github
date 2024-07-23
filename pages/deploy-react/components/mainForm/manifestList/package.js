@@ -101,6 +101,12 @@ export default function Package({
         setStarred(!starred);
     };
 
+    // Updates the current manifest item with all the settings from the reference prod package.
+    function setPackageToProd() {
+        const updatedItem = { ...manifestItem, ...referenceProdPackage };
+        updateManifestItem(updatedItem);
+    }
+
     // If the manifestItem is not defined, return null
     if ( !manifestItem ) {
         return null;
@@ -163,7 +169,9 @@ export default function Package({
                 <div>
                     <span className="info-label">Rev:</span>
                     <input type="text" onChange={handleRevChange} className="current-rev" value={manifestItem.rev} /> 
-                    <span className="set-one-rev-to-prod">set to prod</span>
+                    <span className="set-one-rev-to-prod" onClick={setPackageToProd}>
+                        { referenceProdPackage ? 'set to prod' : 'not a prod package' } 
+                    </span>
                 </div>
                 <div>
                     <span className="info-label">Source:</span>
