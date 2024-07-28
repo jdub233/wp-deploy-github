@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from "next/image";
 
 export default function Header() {
   return (
@@ -7,7 +8,12 @@ export default function Header() {
             <div className="logo">
                 <p>
                     <Link href="/">
-                        <img src="/images/logo.png" alt="Logo" />
+                        <Image
+                            src="/bu-wp-deploy-tool-logo.png"
+                            alt="Logo"
+                            width={443}
+                            height={22}
+                        />
                     </Link>
                 </p>
             </div>
