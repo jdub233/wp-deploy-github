@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         // If session exists, and has been checked to be a collaborator, respond with a message
         try {
             const response = await fetch(
-                `https://api.github.com/repos/${process.env.MANIFEST_REPO}/git/trees/${process.env.MANIFEST_BRANCH}?recursive=1`,
+                `https://api.github.com/repos/${process.env.NEXT_PUBLIC_MANIFEST_REPO}/git/trees/${process.env.NEXT_PUBLIC_MANIFEST_BRANCH}?recursive=1`,
                 { headers }
             );
 

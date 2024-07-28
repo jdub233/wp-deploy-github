@@ -36,7 +36,7 @@ export default async function handler(req, res) {
  async function fetchCollaborators() {
 
   const response = await fetch(
-    `https://api.github.com/repos/${process.env.MANIFEST_REPO}/collaborators`,
+    `https://api.github.com/repos/${process.env.NEXT_PUBLIC_MANIFEST_REPO}/collaborators`,
     { headers }
   );
 

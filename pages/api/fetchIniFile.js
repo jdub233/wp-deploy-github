@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         try {
             // Fetch the ini file from the given path in the manifest repo.
             const response = await fetch(
-                `https://api.github.com/repos/${process.env.MANIFEST_REPO}/contents/${req.query.path}?ref=${process.env.MANIFEST_BRANCH}`,
+                `https://api.github.com/repos/${process.env.NEXT_PUBLIC_MANIFEST_REPO}/contents/${req.query.path}?ref=${process.env.NEXT_PUBLIC_MANIFEST_BRANCH}`,
                 { headers }
             );
 

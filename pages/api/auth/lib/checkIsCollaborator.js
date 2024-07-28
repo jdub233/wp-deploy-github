@@ -5,7 +5,7 @@ const contributorCache = new Map();
 // This function checks if the user's image is a collaborator in the manifest repo
 export default async function checkIsCollaborator(userImage) {
     // Create a cache key based on the manifest repo and the user's image
-    const cacheKey = `${process.env.MANIFEST_REPO}-${userImage}`;
+    const cacheKey = `${process.env.NEXT_PUBLIC_MANIFEST_REPO}-${userImage}`;
 
     // Check if the contributor match is already in the cache
     if (contributorCache.has(cacheKey)) {
@@ -20,7 +20,7 @@ export default async function checkIsCollaborator(userImage) {
         });
         
         // Split the repo slug into owner and repo
-        const [owner, repo] = process.env.MANIFEST_REPO.split('/');
+        const [owner, repo] = process.env.NEXT_PUBLIC_MANIFEST_REPO.split('/');
 
         // Fetch the list of collaborators
         const collaborators = await octokit.request('GET /repos/{owner}/{repo}/collaborators', {
