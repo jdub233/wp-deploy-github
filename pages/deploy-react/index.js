@@ -2,6 +2,7 @@ import { useSession } from 'next-auth/react';
 
 import Header from "./components/header";
 import MainForm from "./components/mainForm";
+import Footer from "./components/footer";
 
 export default function Deploy() {
     // This can be done elsewhere, but we are just verifying that the user is signed in and is a collaborator.
@@ -24,6 +25,7 @@ export default function Deploy() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 }
