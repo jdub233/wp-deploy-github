@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 
-import { compareManifests } from "../lib/compareManifests";
+import { compareManifests } from "../../../lib/compareManifests";
 
 import ManifestList from './mainForm/manifestList';
+import ConfirmationModal from "./mainForm/confirmationModal";
 import CommitMessage from './mainForm/commitMessage';
 
 export default function MainForm() {
@@ -13,6 +14,9 @@ export default function MainForm() {
     const [env, setEnv] = useState("");
     const [install, setInstall] = useState("");
     const [sandbox, setSandbox] = useState("");
+
+    // Validation
+    const [validationResults, setValidationResults] = useState({});
 
 
     // Manifest state
@@ -109,9 +113,21 @@ export default function MainForm() {
 
         // Compare the loaded manifest to the working manifest to determine what has changed.
         const comparison = compareManifests(loadedManifest, workingManifest);
-        console.log('comparison:', comparison);
+            console.log('comparison:', comparison);
 
+            // If there are no changes, then display a message to the user.
+            /*if (comparison.status === 'success' && comparison.removed_packages.length === 0 && comparison.changed_packages.length === 0 && comparison.added_packages.length === 0) {
+                console.log('No changes detected.');
+                return;
+            }
+            */
+
+            // If there are changes, then display a modal to the user with the changes.
+            // The modal should have a button to confirm the changes, which will then trigger the build process.
+            // The modal should also have a button to cancel the changes, which will then dismiss the modal.
        
+            setValidationResults(comparison);
+
     }
 
     return (
@@ -223,11 +239,12 @@ export default function MainForm() {
                 <fieldset className="optional">
                     <CommitMessage />
                 </fieldset>
-                <div className="confimation_modal">
-                    <div className="button-row">
-                        <button id="task_confirm_button" onClick={handleValidate} className="button primary show-modal">Validate</button>
-                    </div>
-                </div>
+
+                <ConfirmationModal
+                    handleValidate={handleValidate}
+                    validationResults={validationResults}
+                />
+
             </form>
         </div>
     );
