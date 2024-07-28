@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
 
 export default function Package({
@@ -122,7 +123,14 @@ export default function Package({
     return (
         <div className={`package-listing ${ !referenceProdPackage || (referenceProdPackage.rev !== manifestItem.rev) ? 'old-version' : 'current-version'}`}>
             <div className="summary-info cf">
-                <div className="img layout"></div>
+                <div className="img layout">
+                    <Image
+                        src={manifestItem.scm === 'git' ? '/git.png' : '/svn.png'}
+                        alt={manifestItem.scm === 'git' ? 'Git' : 'SVN'}
+                        width={40}
+                        height={40}
+                    />
+                </div>
                 <div className="center-content layout">
                     <h3>{manifestItem.id}</h3>
                     <p className="pkg-details">
