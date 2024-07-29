@@ -23,48 +23,51 @@ export default function Home() {
         <meta name="description" content="Tool for updating a build manifest in a GitHub repo." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {!session ? (
-        <>
-          <p>Not signed in</p>
-          <br />
-          <button onClick={() => signIn()}>Sign in</button>
-        </>
-      ) : (
-        <>
-          <Header />
-          <div id="main" role="main">
-            <div className="container" style={{marginLeft: '2em'}}>
+      <Header />
+      <div id="main" role="main">
+          <div className="container" style={{marginLeft: '2em'}}>
               <div className="left">
                 <div className="title">
                   <h1><ImHammer /> WP Deploy</h1>
                 </div>
                 <div className="content" style={{paddingBottom: '3em'}}>
-                  <div>
-                    <div>Signed in to GitHub</div>
-                    <span>
-                      <img src={session.user.image} width={20} height={20} alt="github avatar" />
-                    </span> {session.user.name}
-                   
-                    <button
-                      className="button secondary"
-                      onClick={() => signOut()}
-                      style={{fontSize: '0.8em', padding: '0.5em 1em', marginLeft: '1em'}}
-                    >Sign out</button>
-                  </div>
-                  <div className="button-row">
-                    <Link href="/deploy-react">
-                      <button className="button primary">Deploy</button>
-                    </Link>
-                    Manifest repo: {process.env.NEXT_PUBLIC_MANIFEST_REPO}, branch: {process.env.NEXT_PUBLIC_MANIFEST_BRANCH}
-                  </div>
-                </div>
-
+                {!session ? (
+                  <>
+                    <h2>Sign in</h2>
+                    <p>WP Deploy works with Github to manage build manifests</p>
+                
+                    <div className="button-row">
+                      <button className="button primary" onClick={() => signIn()}>Sign in with GitHub</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <div>
+                        Signed in to GitHub as:
+                        <span style={{paddingLeft: '1em'}}>
+                          <img src={session.user.image} width={20} height={20} alt="github avatar" />
+                        </span> {session.user.name}
+                        <button
+                          className="button secondary"
+                          onClick={() => signOut()}
+                          style={{fontSize: '0.8em', padding: '0.5em 1em', marginLeft: '1em'}}
+                        >Sign out</button>
+                      </div>
+                    </div>
+                    <div className="button-row">
+                      <Link href="/deploy-react">
+                        <button className="button primary" style={{marginRight: '1em'}}>Go to Deploy tool</button>
+                      </Link>
+                      Manifest repo: {process.env.NEXT_PUBLIC_MANIFEST_REPO}, branch: {process.env.NEXT_PUBLIC_MANIFEST_BRANCH}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
-          <Footer />
-        </>
-      )}
+        </div>
+      <Footer />
     </div>
   );
 }
