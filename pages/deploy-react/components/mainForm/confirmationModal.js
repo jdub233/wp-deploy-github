@@ -1,6 +1,6 @@
 import ChangedPackages from "./confirmationModal/changedPackages";
 
-export default function ConfirmationModal({handleValidate, validationResults}) {
+export default function ConfirmationModal({handleValidate, validationResults = {} }) {
    
     return (
         <div className="confimation_modal">
