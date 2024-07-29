@@ -1,4 +1,9 @@
 export default function ChangedPackages({changedPackages}) {
+
+    if (!changedPackages || changedPackages.length === 0) {
+        return null;
+    }
+
     return (
         <div className="package-list changed-packages">
             <h3>Changed Packages</h3>
@@ -12,8 +17,6 @@ export default function ChangedPackages({changedPackages}) {
 }
 
 function ChangedPackage({pkg}) {
-
-    console.log(pkg);
 
     return (
         <li className="package changed" >
