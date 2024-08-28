@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import Package from "./manifestList/package";
 import ManifestListUIControls from "./manifestList/manifestListUIControls";
 
@@ -9,11 +11,28 @@ export default function ManifestList({
     devlManifest,
 }) {
 
+    const [filterCriteria, setFilterCriteria] = useState(null);
+    const [filteredWorkingManifest, setFilteredWorkingManifest] = useState(workingManifest);
+
     function manifestNotEmpty(workingManifest) {
         if (typeof window !== "undefined") {
             return workingManifest.length > 0;
         }
     }
+
+    function applyFilter(manifest) {
+        if (!filterCriteria) return manifest;
+
+        return manifest.filter(item => {
+            // Example criteria: match attributes with prodManifest
+            const prodItem = prodManifest.find(prod => prod.id === item.id);
+            return prodItem && item.rev !== prodItem.rev;
+        });
+    }
+
+    useEffect(() => {
+        setFilteredWorkingManifest(applyFilter(workingManifest));
+    }, [workingManifest, filterCriteria]);
 
     return (
         <>
@@ -34,7 +53,7 @@ export default function ManifestList({
                         <div className="manifest-results-wrapper">
                             { manifestNotEmpty(workingManifest) && <h3 className="working-manifest-title">Working manifest</h3>}
                             <div id="manifest-list-results">
-                                { manifestNotEmpty(workingManifest) && workingManifest.map((manifestItem, index) => (
+                                { manifestNotEmpty(workingManifest) && filteredWorkingManifest.map((manifestItem, index) => (
                                     <Package
                                         key={index}
                                         manifestItem={manifestItem}
@@ -66,7 +85,7 @@ export default function ManifestList({
                                     id="go-add-new-package">Add package</button>
                             </div>
                         </div>
-                        {manifestNotEmpty(workingManifest) && <ManifestListUIControls />}
+                        {manifestNotEmpty(workingManifest) && <ManifestListUIControls setFilterCriteria={setFilterCriteria} filterCriteria={filterCriteria} />}
                     </div>
                 </div>
             </fieldset>
