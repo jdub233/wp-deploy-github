@@ -12,6 +12,7 @@ export default function ManifestList({
 }) {
 
     const [filterCriteria, setFilterCriteria] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
     const [filteredWorkingManifest, setFilteredWorkingManifest] = useState(workingManifest);
 
     function manifestNotEmpty(workingManifest) {
@@ -21,18 +22,26 @@ export default function ManifestList({
     }
 
     function applyFilter(manifest) {
-        if (!filterCriteria) return manifest;
+        if (!filterCriteria && searchTerm == '') return manifest;
 
-        return manifest.filter(item => {
-            // Example criteria: match attributes with prodManifest
-            const prodItem = prodManifest.find(prod => prod.id === item.id);
-            return prodItem && item.rev !== prodItem.rev;
-        });
+        if (searchTerm !== '') {
+            const matchingItems = manifest.filter(item => {
+                return item.id.toLowerCase().includes(searchTerm.toLowerCase());
+            });
+            return matchingItems;
+        }
+
+        if (filterCriteria === 'outdatedProd') {
+            return manifest.filter(item => {
+                const prodItem = prodManifest.find(prod => prod.id === item.id);
+                return prodItem && item.rev !== prodItem.rev;
+            });
+        }
     }
 
     useEffect(() => {
         setFilteredWorkingManifest(applyFilter(workingManifest));
-    }, [workingManifest, filterCriteria]);
+    }, [workingManifest, filterCriteria, searchTerm]);
 
     return (
         <>
@@ -85,7 +94,14 @@ export default function ManifestList({
                                     id="go-add-new-package">Add package</button>
                             </div>
                         </div>
-                        {manifestNotEmpty(workingManifest) && <ManifestListUIControls setFilterCriteria={setFilterCriteria} filterCriteria={filterCriteria} />}
+                        {manifestNotEmpty(workingManifest) && 
+                            <ManifestListUIControls 
+                                filterCriteria={filterCriteria}
+                                setFilterCriteria={setFilterCriteria} 
+                                searchTerm={searchTerm}
+                                setSearchTerm={setSearchTerm}
+                            />
+                        }
                     </div>
                 </div>
             </fieldset>
