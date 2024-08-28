@@ -1,5 +1,7 @@
 import { useSession } from 'next-auth/react';
 
+import { ImHammer } from "react-icons/im";
+
 import Header from "./components/header";
 import MainForm from "./components/mainForm";
 import Footer from "./components/footer";
@@ -19,7 +21,7 @@ export default function Deploy() {
                 <div className="container" style={{marginLeft: '2em'}}>
                     <div className="left">
                         <div className="title">
-                            <h1><span className="icon">&#xe000;</span> Build</h1>
+                            <h1><ImHammer /> Build</h1>
                         </div>
                         <MainForm />
                     </div>
