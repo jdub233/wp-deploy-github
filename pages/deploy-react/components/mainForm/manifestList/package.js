@@ -12,6 +12,7 @@ export default function Package({
     const [starred, setStarred] = useState(false);
     const [repoTags, setRepoTags] = useState([]);
     const [referenceProdPackage, setReferenceProdPackage] = useState({});
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
     useEffect(() => {
         if(typeof window !== "undefined") {
@@ -115,6 +116,8 @@ export default function Package({
     function handleTagClick(tag) {
         const updatedItem = { ...manifestItem, refspec: tag.name, rev: tag.sha };
         updateManifestItem(updatedItem);
+        // Close the popover.
+        setIsPopoverOpen(false);
     }
 
     // If the manifestItem is not defined, return null
@@ -171,6 +174,8 @@ export default function Package({
                         {  repoTags.length > 0 &&
                             <Popover 
                                 placement='right'
+                                isOpen={isPopoverOpen}
+                                onOpenChange={setIsPopoverOpen}
                             >
                                 <PopoverTrigger>
                                     <span className="info-icon">&#9432;</span>
