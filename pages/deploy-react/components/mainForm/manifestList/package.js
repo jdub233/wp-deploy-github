@@ -115,6 +115,12 @@ export default function Package({
         );
     }
 
+    // Update the manifest item with the refspec and rev from the tag.
+    function handleTagClick(tag) {
+        const updatedItem = { ...manifestItem, refspec: tag.name, rev: tag.sha };
+        updateManifestItem(updatedItem);
+    }
+
     // If the manifestItem is not defined, return null
     if ( !manifestItem ) {
         return null;
@@ -177,7 +183,9 @@ export default function Package({
                                     <h4>Tags</h4>
                                     <ul>
                                         {repoTags.map((tag, index) => (
-                                            <li key={index}>{tag}</li>
+                                            <li key={tag.sha}>
+                                                <button onClick={() => handleTagClick(tag)}> {tag.name} </button>
+                                            </li>
                                         ))}
                                     </ul>
 

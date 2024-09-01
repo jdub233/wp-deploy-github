@@ -21,7 +21,10 @@ export default async function handler(req, res) {
 
             // Extract and parse the content of the file.
             const data = await response.json();
-            const tags = data.map(tag => tag.name);
+            const tags = data.map(tag => ({
+                name: tag.name,
+                sha: tag.commit.sha,
+            }));
 
             // Respond with the tags.
             res.status(200).json(tags);
