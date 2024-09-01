@@ -9,11 +9,8 @@ export default function Package({
     devlManifest,
 }) {
     const [expanded, setExpanded] = useState(false);
-    
     const [starred, setStarred] = useState(false);
-
     const [repoTags, setRepoTags] = useState([]);
-
     const [referenceProdPackage, setReferenceProdPackage] = useState({});
 
     useEffect(() => {
@@ -31,7 +28,7 @@ export default function Package({
         // This method of maintaining immutability should work well for data set of a few hundred items.
         setWorkingManifest(currentManifest =>
             currentManifest.map(item =>
-            item.id === updatedItem.id ? { ...item, ...updatedItem } : item // Not sure why the original code uses ...item to spread the orignial properties of the item
+            item.id === updatedItem.id ? { ...item, ...updatedItem } : item // Not sure why the original code uses ...item to spread the original properties of the item
         ));
     }
 
@@ -86,7 +83,6 @@ export default function Package({
                         const response = await fetch(`/api/fetchTags?repo=${repo}`);
                         const data = await response.json();
                         setRepoTags(data);
-                        console.log(data);
                     } catch (error) {
                         console.error('Failed to fetch tags:', error);
                     }
