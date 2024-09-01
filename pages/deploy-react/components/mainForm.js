@@ -243,6 +243,8 @@ export default function MainForm() {
                 <ConfirmationModal
                     handleValidate={handleValidate}
                     validationResults={validationResults}
+                    env={env}
+                    install={install}
                 />
 
             </form>
