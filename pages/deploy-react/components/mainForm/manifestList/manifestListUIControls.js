@@ -3,6 +3,7 @@ export default function ManifestListUIControls( {
     setFilterCriteria,
     searchTerm,
     setSearchTerm,
+    setAllToProd,
 } ) {
     return (
         <div className="manifest-list-ui-controls">
@@ -17,7 +18,7 @@ export default function ManifestListUIControls( {
                 <button type="button" onClick={() => setFilterCriteria(null)} className={`manifest-list-filter show-all${!filterCriteria ? ' filter-active' : ''}`}>Show All</button>
                 <button type="button" onClick={() => setFilterCriteria('outdatedProd')} className={`manifest-list-filter${filterCriteria == 'outdatedProd' ? ' filter-active' : ''}`}>Show outdated only</button>
                 <button type="button" className="manifest-list-filter">Show	mismatched SCM</button>
-                <button type="button" className="manifest-list-action manifest-list-add-from-prod">Replace all with Prod</button>
+                <button type="button" onClick={() => setAllToProd()} className="manifest-list-action manifest-list-add-from-prod">Replace all with Prod</button>
             </div>
         </div>
     );

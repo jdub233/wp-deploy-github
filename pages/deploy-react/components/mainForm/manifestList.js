@@ -43,6 +43,10 @@ export default function ManifestList({
         setFilteredWorkingManifest(applyFilter(workingManifest));
     }, [workingManifest, filterCriteria, searchTerm]);
 
+    function setAllToProd() {
+        setWorkingManifest(prodManifest);
+    }
+
     return (
         <>
             <fieldset>
@@ -100,6 +104,7 @@ export default function ManifestList({
                                 setFilterCriteria={setFilterCriteria} 
                                 searchTerm={searchTerm}
                                 setSearchTerm={setSearchTerm}
+                                setAllToProd={setAllToProd}
                             />
                         }
                     </div>
