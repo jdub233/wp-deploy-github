@@ -1,7 +1,12 @@
-import ChangedPackages from "./confirmationModal/changedPackages";
+import ChangedPackages from './confirmationModal/changedPackages';
+import RemovedPackages from './confirmationModal/removedPackages';
+import AddedPackages from './confirmationModal/addedPackages';
 
 export default function ConfirmationModal({handleValidate, validationResults = {}, env, install }) {
-    const numChangedPackages = validationResults.changed_packages.length + validationResults.removed_packages.length + validationResults.added_packages.length;
+    const numChangedPackages = 
+        (validationResults.changed_packages?.length ?? 0) + 
+        (validationResults.removed_packages?.length ?? 0) + 
+        (validationResults.added_packages?.length ?? 0);
 
     return (
         <div className="confimation_modal">
@@ -13,7 +18,6 @@ export default function ConfirmationModal({handleValidate, validationResults = {
 
             <div id="task_confirm" className="reveal-modal">
                 <div className="confirmation-status confirmation-success">
-                    <div><hr style={{paddingTop: '3em'}} /></div>
                     <h1>Validation results</h1>
                     <p>You are about to build <span className="full_change_count">{numChangedPackages}</span> update{numChangedPackages > 1 ? 's' : ''} for 
                         <span className="destination_install"> {install}</span> on <span
@@ -29,37 +33,13 @@ export default function ConfirmationModal({handleValidate, validationResults = {
                     </div>
                     <div id="validate-modal-success-tabs">
                         <ul>
-                            <li><a href="#tab-summary-view">Summary</a></li>
-                            <li><a href="#tab-full-log-view">Full Log</a></li>
+                            <li>&nbsp;</li>
                         </ul>
                         <div id="tab-summary-view">
                             <ChangedPackages changedPackages={validationResults.changed_packages} />
-                            <div className="package-list removed-packages">
-                                <h3>Removed Packages</h3>
-                                <ul></ul>
-                            </div>
-                            <div className="package-list added-packages">
-                                <h3>Added Packages</h3>
-                                <ul></ul>
-                            </div>
+                            <RemovedPackages removedPackages={validationResults.removed_packages} />
+                            <AddedPackages addedPackages={validationResults.added_packages} />
                         </div>
-                        <div id="validate-modal-success-tabs">
-                            <div id="tab-summary-view">
-                                <ChangedPackages changedPackages={validationResults.changed_packages} />
-                                <div className="package-list removed-packages">
-                                    <h3>Removed Packages</h3>
-                                    <ul></ul>
-                                </div>
-                                <div className="package-list added-packages">
-                                    <h3>Added Packages</h3>
-                                    <ul></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="prettyprint" id="validation_results">
-                        {validationResults && JSON.stringify(validationResults)}
                     </div>
                 </div>
             </div>
