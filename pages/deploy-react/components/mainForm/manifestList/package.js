@@ -10,7 +10,7 @@ export default function Package({
 }) {
     const [expanded, setExpanded] = useState(false);
     const [starred, setStarred] = useState(false);
-    const [repoTags, setRepoTags] = useState([]);
+    const [repoTags, setRepoTags] = useState({});
     const [referenceProdPackage, setReferenceProdPackage] = useState({});
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
@@ -75,7 +75,7 @@ export default function Package({
 
             // If the package is being expanded and repoTags is empty, then fetch the tags for the repo.
             // And only do this if the scm is git.
-            if (!expanded && repoTags.length === 0 && manifestItem.scm === 'git') {
+            if (!expanded && Object.keys( repoTags ).length === 0 && manifestItem.scm === 'git') {
                 const fetchTags = async () => {
                     try {
                         // The source values stores the full repo location starting with git@github.com/ and ending with .git, so wee need to remove those before querying the API.
@@ -171,7 +171,7 @@ export default function Package({
                     <div className="refspec-line">
                         <span className="info-label">Refspec:</span>
                                 <input type="text" onChange={handleRefSpecChange} className="current-refspec" value={manifestItem.refspec} />
-                        {  repoTags.length > 0 &&
+                        {  (repoTags.tags?.length > 0 || repoTags.branches?.length > 0) &&
                             <Popover 
                                 placement='right'
                                 isOpen={isPopoverOpen}
@@ -181,14 +181,28 @@ export default function Package({
                                     <span className="info-icon">&#9432;</span>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                    <h4>Tags</h4>
-                                    <ul>
-                                        {repoTags.map((tag, index) => (
-                                            <li key={tag.sha}>
-                                                <button onClick={() => handleTagClick(tag)}> {tag.name} </button>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <div className="ref-2-columns" style={{display: 'flex', flexDirection: 'row'}}>
+                                        <div className='package-tags'>
+                                            <h4>Tags</h4>
+                                            <ul>
+                                                {repoTags.tags.map((tag, index) => (
+                                                    <li key={tag.sha}>
+                                                        <button onClick={() => handleTagClick(tag)}> {tag.name} </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <div className='package-branches'>
+                                            <h4>Branches</h4>
+                                            <ul>
+                                                {repoTags.branches.map((branch, index) => (
+                                                    <li key={branch.sha}>
+                                                        <button onClick={() => handleTagClick(branch)}> {branch.name} </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
 
                                 </PopoverContent>
                             </Popover>
