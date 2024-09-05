@@ -130,6 +130,28 @@ export default function MainForm() {
 
     }
 
+    function cancelValidation() {
+        setValidationResults({});
+    }
+
+    async function commitWorkingManifest() {
+        // Commit the working manifest to the appropriate ini file.
+        // This will require a POST request to the API endpoint commitIniFile.
+        // The body of the request should include the manifest as a stringified object.
+        // The path of the ini file should be included as a query parameter.
+        const commitResponse = await fetch(`/api/commitIniFile?path=${env}/${install}.ini`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(workingManifest),
+        });
+
+        // Display the response to the user.
+        console.log('commitResponse:', commitResponse);
+   
+    }
+
     return (
         <div id="preexisting" className="tab-content">
             <form id="form_build_old">
@@ -242,9 +264,11 @@ export default function MainForm() {
 
                 <ConfirmationModal
                     handleValidate={handleValidate}
+                    cancelValidation={cancelValidation}
                     validationResults={validationResults}
                     env={env}
                     install={install}
+                    commitWorkingManifest={commitWorkingManifest}
                 />
 
             </form>
