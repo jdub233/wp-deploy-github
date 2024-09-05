@@ -22,6 +22,9 @@ export default function MainForm() {
     // Manifest state
     const [workingManifest, setWorkingManifest] = useState([]);
 
+    // Track the commit message
+    const [commitMessage, setCommitMessage] = useState('');
+
     // Reference manifests (prod, devl, and a copy of the working manifest as it was originally loaded).
     const [prodManifest, setProdManifest] = useState([]);
     const [devlManifest, setDevlManifest] = useState([]);
@@ -93,6 +96,12 @@ export default function MainForm() {
         console.log('hey sandbox is now this:', newSandbox);
     };
 
+    const handleMessageChange = (event) => {
+        // Get the new commit message value and update the state.
+        const { target: { value: newMessage } } = event;
+        setCommitMessage(newMessage);
+    };
+
     async function getNewWorkingManifest(env, install) {
         try {
             const response = await fetch(`/api/fetchIniFile?path=${env}/${install}.ini`);
@@ -144,7 +153,7 @@ export default function MainForm() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(workingManifest),
+            body: JSON.stringify({ message: commitMessage, manifest: workingManifest}),
         });
 
         // Display the response to the user.
@@ -259,7 +268,10 @@ export default function MainForm() {
                     devlManifest={devlManifest}
                 />
                 <fieldset className="optional">
-                    <CommitMessage />
+                    <CommitMessage 
+                        message={commitMessage}
+                        handleMessageChange={handleMessageChange}
+                    />
                 </fieldset>
 
                 <ConfirmationModal
