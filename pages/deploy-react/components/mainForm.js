@@ -164,6 +164,13 @@ export default function MainForm() {
         // Display the response to the user.
         console.log('commitResponse:', commitResponse);
    
+        // Temp ui feedback using browser alert
+        if (commitResponse.status === 200) {
+            alert('Commit successful!');
+        } else {
+            alert('Error committing file');
+        }
+
     }
 
     return (
