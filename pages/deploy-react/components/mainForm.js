@@ -148,7 +148,12 @@ export default function MainForm() {
         // This will require a POST request to the API endpoint commitIniFile.
         // The body of the request should include the manifest as a stringified object.
         // The path of the ini file should be included as a query parameter.
-        const commitResponse = await fetch(`/api/commitIniFile?path=${env}/${install}.ini`, {
+
+        // Distinguish between sandboxes and other installs like blogs and cms.
+        const fileRoot = (install == 'sandbox') ? sandbox : install;
+
+        // Send the commit request to the API endpoint.
+        const commitResponse = await fetch(`/api/commitIniFile?path=${env}/${fileRoot}.ini`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
