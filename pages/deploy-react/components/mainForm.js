@@ -143,16 +143,13 @@ export default function MainForm() {
         setValidationResults({});
     }
 
+    // Commit the working manifest to the appropriate ini file.
     async function commitWorkingManifest() {
-        // Commit the working manifest to the appropriate ini file.
-        // This will require a POST request to the API endpoint commitIniFile.
-        // The body of the request should include the manifest as a stringified object.
-        // The path of the ini file should be included as a query parameter.
 
         // Distinguish between sandboxes and other installs like blogs and cms.
         const fileRoot = (install == 'sandbox') ? sandbox : install;
 
-        // Send the commit request to the API endpoint.
+        // Send the commit data as POST to the commitIniFile API endpoint, with the path as a query parameter.
         const commitResponse = await fetch(`/api/commitIniFile?path=${env}/${fileRoot}.ini`, {
             method: 'POST',
             headers: {
