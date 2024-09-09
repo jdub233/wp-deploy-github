@@ -7,6 +7,7 @@ import checkIsCollaborator from './auth/lib/checkIsCollaborator';
 
 import { getCurrentESTDateTimeString } from '../../lib/getCurrentESTDateTimeString';
 import { commitToRepo } from '../../lib/commitToRepo';
+import { getGithubLogin } from '../../lib/getGithubLogin';
 
 export default async function handler(req, res) {
 
@@ -41,10 +42,13 @@ export default async function handler(req, res) {
             // Add spaces around the "=" sign
             iniString = iniString.replace(/=/g, ' = ');
 
+            // Get the Github login name for the user
+            const githubLogin = await getGithubLogin(session.user.image);
+
             // Prepend the build information to the ini file
             const iniFile = `; BUILD ${getCurrentESTDateTimeString()}-cms\n` 
                 + `; MSG = ${message}\n`
-                + `; USER = ${session.user.name}\n\n`
+                + `; USER = ${githubLogin}\n\n`
                 + iniString;
 
             // Commit the ini file to the given path in the manifest repo
