@@ -21,7 +21,7 @@ export default function Deploy() {
                 <div className="container" style={{marginLeft: '2em'}}>
                     <div className="left">
                         <div className="title">
-                            <h1><ImHammer /> Build</h1>
+                            <h1><ImHammer /> Deploy</h1>
                         </div>
                         <MainForm />
                     </div>
