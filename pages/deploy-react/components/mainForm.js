@@ -22,6 +22,9 @@ export default function MainForm() {
     // Manifest state
     const [workingManifest, setWorkingManifest] = useState([]);
 
+    // Track the commit message
+    const [commitMessage, setCommitMessage] = useState('');
+
     // Reference manifests (prod, devl, and a copy of the working manifest as it was originally loaded).
     const [prodManifest, setProdManifest] = useState([]);
     const [devlManifest, setDevlManifest] = useState([]);
@@ -93,6 +96,12 @@ export default function MainForm() {
         console.log('hey sandbox is now this:', newSandbox);
     };
 
+    const handleMessageChange = (event) => {
+        // Get the new commit message value and update the state.
+        const { target: { value: newMessage } } = event;
+        setCommitMessage(newMessage);
+    };
+
     async function getNewWorkingManifest(env, install) {
         try {
             const response = await fetch(`/api/fetchIniFile?path=${env}/${install}.ini`);
@@ -127,6 +136,37 @@ export default function MainForm() {
             // The modal should also have a button to cancel the changes, which will then dismiss the modal.
        
             setValidationResults(comparison);
+
+    }
+
+    function cancelValidation() {
+        setValidationResults({});
+    }
+
+    // Commit the working manifest to the appropriate ini file.
+    async function commitWorkingManifest() {
+
+        // Distinguish between sandboxes and other installs like blogs and cms.
+        const fileRoot = (install == 'sandbox') ? sandbox : install;
+
+        // Send the commit data as POST to the commitIniFile API endpoint, with the path as a query parameter.
+        const commitResponse = await fetch(`/api/commitIniFile?path=${env}/${fileRoot}.ini`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: commitMessage, manifest: workingManifest}),
+        });
+
+        // Display the response to the user.
+        console.log('commitResponse:', commitResponse);
+   
+        // Temp ui feedback using browser alert
+        if (commitResponse.status === 200) {
+            alert('Commit successful!');
+        } else {
+            alert('Error committing file');
+        }
 
     }
 
@@ -237,14 +277,19 @@ export default function MainForm() {
                     devlManifest={devlManifest}
                 />
                 <fieldset className="optional">
-                    <CommitMessage />
+                    <CommitMessage 
+                        message={commitMessage}
+                        handleMessageChange={handleMessageChange}
+                    />
                 </fieldset>
 
                 <ConfirmationModal
                     handleValidate={handleValidate}
+                    cancelValidation={cancelValidation}
                     validationResults={validationResults}
                     env={env}
                     install={install}
+                    commitWorkingManifest={commitWorkingManifest}
                 />
 
             </form>

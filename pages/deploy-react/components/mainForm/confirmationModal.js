@@ -2,11 +2,16 @@ import ChangedPackages from './confirmationModal/changedPackages';
 import RemovedPackages from './confirmationModal/removedPackages';
 import AddedPackages from './confirmationModal/addedPackages';
 
-export default function ConfirmationModal({handleValidate, validationResults = {}, env, install }) {
+export default function ConfirmationModal({handleValidate, cancelValidation, validationResults = {}, env, install, commitWorkingManifest }) {
     const numChangedPackages = 
         (validationResults.changed_packages?.length ?? 0) + 
         (validationResults.removed_packages?.length ?? 0) + 
         (validationResults.added_packages?.length ?? 0);
+
+    function handleDeploy(event) {
+        event.preventDefault();
+        commitWorkingManifest();
+    }
 
     return (
         <div className="confimation_modal">
@@ -41,6 +46,10 @@ export default function ConfirmationModal({handleValidate, validationResults = {
                             <AddedPackages addedPackages={validationResults.added_packages} />
                         </div>
                     </div>
+                </div>
+                <div className="button-row">
+                    <button className="button primary pull-right" onClick={handleDeploy}>Deploy updates for {numChangedPackages} packages</button>
+                    <button className="button secondary" onClick={cancelValidation}>Cancel</button>
                 </div>
             </div>
             }
