@@ -1,6 +1,21 @@
+import Modal from 'react-modal';
+
 import ChangedPackages from './confirmationModal/changedPackages';
 import RemovedPackages from './confirmationModal/removedPackages';
 import AddedPackages from './confirmationModal/addedPackages';
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+      },
+};
+
+Modal.setAppElement('#__next');
 
 export default function ConfirmationModal({handleValidate, cancelValidation, validationResults = {}, env, install, commitWorkingManifest }) {
     const numChangedPackages = 
@@ -18,6 +33,12 @@ export default function ConfirmationModal({handleValidate, cancelValidation, val
             <div className="button-row">
                 <button id="task_confirm_button" onClick={handleValidate} className="button primary show-modal">Validate</button>
             </div >
+
+            <Modal
+                isOpen={Object.keys( validationResults ).length != 0}
+                onRequestClose={cancelValidation}
+                style={customStyles}
+            >
 
             { Object.keys( validationResults ).length != 0 &&
 
@@ -54,6 +75,7 @@ export default function ConfirmationModal({handleValidate, cancelValidation, val
             </div>
             }
 
+            </Modal>
         </div>
     );
 }

@@ -254,7 +254,7 @@
     #main .container .left .manifest-packages-outer .manifest-list-loading svg {
       display: inline-block;
       vertical-align: middle; }
-
+/* disable for svg icons 
 path {
   stroke: cyan;
   stroke-width: 6;
@@ -263,7 +263,7 @@ path {
   stroke-dasharray: 193.904983521;
   fill: none;
   -webkit-animation: load 4s linear infinite, color 3s linear infinite; }
-
+*/
 @-webkit-keyframes load {
   from {
     stroke-dashoffset: 775.6199340820312; } }
@@ -926,7 +926,7 @@ header .toolbar ul li a:hover {
   padding-right: 1em;
   position: relative;
   top: -1px;
-  z-index: 9;
+  /* z-index: 9; */
 }
 /* line 456, style.scss */
 #main .container .left .tab-content:focus {
@@ -1275,8 +1275,10 @@ header .wrapper, #footer .wrapper {
 
 /* line 814, style.scss */
 .reveal-modal {
+  /*
   display: none;
   position: fixed;
+  */
   z-index: 30;
   max-height: 640px !important;
   width: 640px;
@@ -1355,30 +1357,30 @@ header .wrapper, #footer .wrapper {
   border: none;
 }
 /* line 908, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-header.ui-state-active {
+.reveal-modal {
   border: solid 1px #05789f;
 }
 /* line 912, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-header li:first-child {
-  margin-left: 10px;
+.reveal-modal li:first-child {
+  /* margin-left: 10px; */
 }
 /* line 917, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-tabs-nav {
+.reveal-modal {
   font-size: 0.9em;
 }
 /* line 920, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-tabs-nav .ui-state-active {
+.reveal-modal {
   background: #fff !important;
   border: solid 1px #05789f;
   border-bottom: none;
 }
 /* line 928, style.scss */
-.reveal-modal .ui-widget.ui-tabs.ui-widget-content {
+.reveal-modal {
   border: none;
   margin-top: 15px;
 }
 /* line 932, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel {
+.reveal-modal {
   border: solid 1px #05789f;
   background: #fff;
   overflow: auto;
@@ -1401,55 +1403,55 @@ header .wrapper, #footer .wrapper {
   line-height: 1em;
 }
 /* line 955, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul {
+.reveal-modal ul {
   margin: 0.75em 0 1.5em;
 }
 /* line 958, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package {
+.reveal-modal ul .package {
   margin: 0.5em 0;
 }
 /* line 962, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package.added h4 {
+.reveal-modal ul .package.added h4 {
   color: green;
 }
 /* line 967, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package.removed {
+.reveal-modal ul .package.removed {
   color: red;
 }
 /* line 972, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package.changed h4 {
+.reveal-modal ul .package.changed h4 {
   color: #f3aa00;
 }
 /* line 976, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package h4 {
+.reveal-modal ul .package h4 {
   font-weight: bold;
 }
 /* line 978, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package h4 span {
+.reveal-modal ul .package h4 span {
   font-size: 0.9em;
 }
 /* line 983, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package ul {
+.reveal-modal ul .package ul {
   margin: 0.25em 1em 0.75em;
   padding-left: 1em;
   list-style: initial;
 }
 /* line 988, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package ul li .icon-arrow-right {
+.reveal-modal ul .package ul li .icon-arrow-right {
   margin: 0 0.25em;
   font-size: 0.8em;
   color: #777;
 }
 /* line 995, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package .new-value, .reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package .old-value {
+.reveal-modal ul .package .new-value, .reveal-modal ul .package .old-value {
   font-size: 0.9em;
 }
 /* line 998, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package .new-value {
+.reveal-modal ul .package .new-value {
   font-weight: bold;
 }
 /* line 1001, style.scss */
-.reveal-modal .ui-widget.ui-tabs .ui-widget-content.ui-tabs-panel ul .package .old-value {
+.reveal-modal ul .package .old-value {
   font-style: italic;
   color: #888;
 }
