@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Popover, Portal } from "@chakra-ui/react";
+import { Popover, Portal, Box, Stack, Button, Text, Separator } from "@chakra-ui/react";
 
 export default function Package({
     manifestItem,
@@ -182,103 +182,126 @@ export default function Package({
                                 </Popover.Trigger>
                                 <Portal>
                                     <Popover.Positioner>
-                                        <Popover.Content width="450px">
+                                        <Popover.Content width="600px" maxHeight="500px">
                                             <Popover.Body padding="0">
-                                                <div style={{ display: 'flex', flexDirection: 'row', gap: 0 }}>
-                                                    <div style={{ 
-                                                        flex: 1, 
-                                                        maxHeight: '350px', 
-                                                        overflowY: 'auto',
-                                                        padding: '12px',
-                                                        borderRight: '1px solid #e2e8f0'
-                                                    }}>
-                                                        <h4 style={{ 
-                                                            margin: '0 0 10px 0',
-                                                            fontSize: '14px',
-                                                            fontWeight: '600',
-                                                            color: '#2d3748',
-                                                            textTransform: 'uppercase',
-                                                            letterSpacing: '0.5px'
-                                                        }}>Tags</h4>
-                                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                                            {repoTags.tags.map((tag) => (
-                                                                <li key={tag.sha} style={{ marginBottom: '4px' }}>
-                                                                    <button 
+                                                <Stack direction="row" gap="0" height="100%">
+                                                    {/* Tags Column */}
+                                                    <Box 
+                                                        flex="1" 
+                                                        padding="4" 
+                                                        borderRightWidth="1px" 
+                                                        borderRightColor="gray.200"
+                                                    >
+                                                        <Text 
+                                                            fontSize="xs" 
+                                                            fontWeight="semibold" 
+                                                            color="gray.600" 
+                                                            textTransform="uppercase" 
+                                                            letterSpacing="wider"
+                                                            marginBottom="3"
+                                                        >
+                                                            Tags
+                                                        </Text>
+                                                        <Box 
+                                                            maxHeight="420px" 
+                                                            overflowY="auto"
+                                                            css={{
+                                                                '&::-webkit-scrollbar': {
+                                                                    width: '8px',
+                                                                },
+                                                                '&::-webkit-scrollbar-track': {
+                                                                    background: '#f1f1f1',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb': {
+                                                                    background: '#cbd5e0',
+                                                                    borderRadius: '4px',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb:hover': {
+                                                                    background: '#a0aec0',
+                                                                },
+                                                            }}
+                                                        >
+                                                            <Stack gap="1">
+                                                                {repoTags.tags.map((tag) => (
+                                                                    <Button
+                                                                        key={tag.sha}
                                                                         onClick={() => handleTagClick(tag)}
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            textAlign: 'left',
-                                                                            padding: '6px 8px',
-                                                                            border: '1px solid #e2e8f0',
-                                                                            borderRadius: '4px',
-                                                                            background: '#fff',
-                                                                            cursor: 'pointer',
-                                                                            fontSize: '13px',
-                                                                            transition: 'all 0.15s ease',
-                                                                            fontFamily: 'Consolas, Monaco, monospace'
-                                                                        }}
-                                                                        onMouseEnter={(e) => {
-                                                                            e.currentTarget.style.background = '#f7fafc';
-                                                                            e.currentTarget.style.borderColor = '#4299e1';
-                                                                        }}
-                                                                        onMouseLeave={(e) => {
-                                                                            e.currentTarget.style.background = '#fff';
-                                                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                        width="full"
+                                                                        justifyContent="flex-start"
+                                                                        fontFamily="mono"
+                                                                        fontSize="xs"
+                                                                        height="auto"
+                                                                        padding="2"
+                                                                        _hover={{
+                                                                            bg: 'blue.50',
+                                                                            borderColor: 'blue.400',
                                                                         }}
                                                                     >
                                                                         {tag.name}
-                                                                    </button>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                    <div style={{ 
-                                                        flex: 1, 
-                                                        maxHeight: '350px', 
-                                                        overflowY: 'auto',
-                                                        padding: '12px'
-                                                    }}>
-                                                        <h4 style={{ 
-                                                            margin: '0 0 10px 0',
-                                                            fontSize: '14px',
-                                                            fontWeight: '600',
-                                                            color: '#2d3748',
-                                                            textTransform: 'uppercase',
-                                                            letterSpacing: '0.5px'
-                                                        }}>Branches</h4>
-                                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                                            {repoTags.branches.map((branch) => (
-                                                                <li key={branch.sha} style={{ marginBottom: '4px' }}>
-                                                                    <button 
+                                                                    </Button>
+                                                                ))}
+                                                            </Stack>
+                                                        </Box>
+                                                    </Box>
+                                                    
+                                                    {/* Branches Column */}
+                                                    <Box flex="1" padding="4">
+                                                        <Text 
+                                                            fontSize="xs" 
+                                                            fontWeight="semibold" 
+                                                            color="gray.600" 
+                                                            textTransform="uppercase" 
+                                                            letterSpacing="wider"
+                                                            marginBottom="3"
+                                                        >
+                                                            Branches
+                                                        </Text>
+                                                        <Box 
+                                                            maxHeight="420px" 
+                                                            overflowY="auto"
+                                                            css={{
+                                                                '&::-webkit-scrollbar': {
+                                                                    width: '8px',
+                                                                },
+                                                                '&::-webkit-scrollbar-track': {
+                                                                    background: '#f1f1f1',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb': {
+                                                                    background: '#cbd5e0',
+                                                                    borderRadius: '4px',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb:hover': {
+                                                                    background: '#a0aec0',
+                                                                },
+                                                            }}
+                                                        >
+                                                            <Stack gap="1">
+                                                                {repoTags.branches.map((branch) => (
+                                                                    <Button
+                                                                        key={branch.sha}
                                                                         onClick={() => handleTagClick(branch)}
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            textAlign: 'left',
-                                                                            padding: '6px 8px',
-                                                                            border: '1px solid #e2e8f0',
-                                                                            borderRadius: '4px',
-                                                                            background: '#fff',
-                                                                            cursor: 'pointer',
-                                                                            fontSize: '13px',
-                                                                            transition: 'all 0.15s ease',
-                                                                            fontFamily: 'Consolas, Monaco, monospace'
-                                                                        }}
-                                                                        onMouseEnter={(e) => {
-                                                                            e.currentTarget.style.background = '#f7fafc';
-                                                                            e.currentTarget.style.borderColor = '#4299e1';
-                                                                        }}
-                                                                        onMouseLeave={(e) => {
-                                                                            e.currentTarget.style.background = '#fff';
-                                                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                        width="full"
+                                                                        justifyContent="flex-start"
+                                                                        fontFamily="mono"
+                                                                        fontSize="xs"
+                                                                        height="auto"
+                                                                        padding="2"
+                                                                        _hover={{
+                                                                            bg: 'blue.50',
+                                                                            borderColor: 'blue.400',
                                                                         }}
                                                                     >
                                                                         {branch.name}
-                                                                    </button>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                                                    </Button>
+                                                                ))}
+                                                            </Stack>
+                                                        </Box>
+                                                    </Box>
+                                                </Stack>
                                             </Popover.Body>
                                         </Popover.Content>
                                     </Popover.Positioner>
