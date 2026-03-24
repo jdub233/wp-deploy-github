@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
+import { Popover, Portal } from "@chakra-ui/react";
 
 export default function Package({
     manifestItem,
@@ -172,40 +172,45 @@ export default function Package({
                         <span className="info-label">Refspec:</span>
                                 <input type="text" onChange={handleRefSpecChange} className="current-refspec" value={manifestItem.refspec} />
                         {  (repoTags.tags?.length > 0 || repoTags.branches?.length > 0) &&
-                            <Popover 
-                                placement='right'
-                                isOpen={isPopoverOpen}
-                                onOpenChange={setIsPopoverOpen}
+                            <Popover.Root
+                                open={isPopoverOpen}
+                                onOpenChange={(e) => setIsPopoverOpen(e.open)}
+                                positioning={{ placement: "right" }}
                             >
-                                <PopoverTrigger>
-                                    <span className="info-icon">&#9432;</span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                    <div className="ref-2-columns" style={{display: 'flex', flexDirection: 'row'}}>
-                                        <div className='package-tags'>
-                                            <h4>Tags</h4>
-                                            <ul>
-                                                {repoTags.tags.map((tag, index) => (
-                                                    <li key={tag.sha}>
-                                                        <button onClick={() => handleTagClick(tag)}> {tag.name} </button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                        <div className='package-branches'>
-                                            <h4>Branches</h4>
-                                            <ul>
-                                                {repoTags.branches.map((branch, index) => (
-                                                    <li key={branch.sha}>
-                                                        <button onClick={() => handleTagClick(branch)}> {branch.name} </button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </PopoverContent>
-                            </Popover>
+                                <Popover.Trigger asChild>
+                                    <span className="info-icon" style={{ cursor: "pointer" }}>&#9432;</span>
+                                </Popover.Trigger>
+                                <Portal>
+                                    <Popover.Positioner>
+                                        <Popover.Content width="400px">
+                                            <Popover.Body>
+                                                <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+                                                    <div style={{ flex: 1, maxHeight: '300px', overflowY: 'auto' }}>
+                                                        <h4>Tags</h4>
+                                                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                                                            {repoTags.tags.map((tag) => (
+                                                                <li key={tag.sha}>
+                                                                    <button onClick={() => handleTagClick(tag)}>{tag.name}</button>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                    <div style={{ flex: 1, maxHeight: '300px', overflowY: 'auto' }}>
+                                                        <h4>Branches</h4>
+                                                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                                                            {repoTags.branches.map((branch) => (
+                                                                <li key={branch.sha}>
+                                                                    <button onClick={() => handleTagClick(branch)}>{branch.name}</button>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </Popover.Body>
+                                        </Popover.Content>
+                                    </Popover.Positioner>
+                                </Portal>
+                            </Popover.Root>
                         }
                     </div>
                 }
