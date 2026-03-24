@@ -182,25 +182,98 @@ export default function Package({
                                 </Popover.Trigger>
                                 <Portal>
                                     <Popover.Positioner>
-                                        <Popover.Content width="400px">
-                                            <Popover.Body>
-                                                <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-                                                    <div style={{ flex: 1, maxHeight: '300px', overflowY: 'auto' }}>
-                                                        <h4>Tags</h4>
-                                                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        <Popover.Content width="450px">
+                                            <Popover.Body padding="0">
+                                                <div style={{ display: 'flex', flexDirection: 'row', gap: 0 }}>
+                                                    <div style={{ 
+                                                        flex: 1, 
+                                                        maxHeight: '350px', 
+                                                        overflowY: 'auto',
+                                                        padding: '12px',
+                                                        borderRight: '1px solid #e2e8f0'
+                                                    }}>
+                                                        <h4 style={{ 
+                                                            margin: '0 0 10px 0',
+                                                            fontSize: '14px',
+                                                            fontWeight: '600',
+                                                            color: '#2d3748',
+                                                            textTransform: 'uppercase',
+                                                            letterSpacing: '0.5px'
+                                                        }}>Tags</h4>
+                                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                                             {repoTags.tags.map((tag) => (
-                                                                <li key={tag.sha}>
-                                                                    <button onClick={() => handleTagClick(tag)}>{tag.name}</button>
+                                                                <li key={tag.sha} style={{ marginBottom: '4px' }}>
+                                                                    <button 
+                                                                        onClick={() => handleTagClick(tag)}
+                                                                        style={{
+                                                                            width: '100%',
+                                                                            textAlign: 'left',
+                                                                            padding: '6px 8px',
+                                                                            border: '1px solid #e2e8f0',
+                                                                            borderRadius: '4px',
+                                                                            background: '#fff',
+                                                                            cursor: 'pointer',
+                                                                            fontSize: '13px',
+                                                                            transition: 'all 0.15s ease',
+                                                                            fontFamily: 'Consolas, Monaco, monospace'
+                                                                        }}
+                                                                        onMouseEnter={(e) => {
+                                                                            e.currentTarget.style.background = '#f7fafc';
+                                                                            e.currentTarget.style.borderColor = '#4299e1';
+                                                                        }}
+                                                                        onMouseLeave={(e) => {
+                                                                            e.currentTarget.style.background = '#fff';
+                                                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                                                        }}
+                                                                    >
+                                                                        {tag.name}
+                                                                    </button>
                                                                 </li>
                                                             ))}
                                                         </ul>
                                                     </div>
-                                                    <div style={{ flex: 1, maxHeight: '300px', overflowY: 'auto' }}>
-                                                        <h4>Branches</h4>
-                                                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                                                    <div style={{ 
+                                                        flex: 1, 
+                                                        maxHeight: '350px', 
+                                                        overflowY: 'auto',
+                                                        padding: '12px'
+                                                    }}>
+                                                        <h4 style={{ 
+                                                            margin: '0 0 10px 0',
+                                                            fontSize: '14px',
+                                                            fontWeight: '600',
+                                                            color: '#2d3748',
+                                                            textTransform: 'uppercase',
+                                                            letterSpacing: '0.5px'
+                                                        }}>Branches</h4>
+                                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                                             {repoTags.branches.map((branch) => (
-                                                                <li key={branch.sha}>
-                                                                    <button onClick={() => handleTagClick(branch)}>{branch.name}</button>
+                                                                <li key={branch.sha} style={{ marginBottom: '4px' }}>
+                                                                    <button 
+                                                                        onClick={() => handleTagClick(branch)}
+                                                                        style={{
+                                                                            width: '100%',
+                                                                            textAlign: 'left',
+                                                                            padding: '6px 8px',
+                                                                            border: '1px solid #e2e8f0',
+                                                                            borderRadius: '4px',
+                                                                            background: '#fff',
+                                                                            cursor: 'pointer',
+                                                                            fontSize: '13px',
+                                                                            transition: 'all 0.15s ease',
+                                                                            fontFamily: 'Consolas, Monaco, monospace'
+                                                                        }}
+                                                                        onMouseEnter={(e) => {
+                                                                            e.currentTarget.style.background = '#f7fafc';
+                                                                            e.currentTarget.style.borderColor = '#4299e1';
+                                                                        }}
+                                                                        onMouseLeave={(e) => {
+                                                                            e.currentTarget.style.background = '#fff';
+                                                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                                                        }}
+                                                                    >
+                                                                        {branch.name}
+                                                                    </button>
                                                                 </li>
                                                             ))}
                                                         </ul>
