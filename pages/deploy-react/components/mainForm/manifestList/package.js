@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Popover, Portal, Box, Stack, Button, Text, Separator } from "@chakra-ui/react";
+import { Popover, Portal, Box, Stack, Button, Text } from "@chakra-ui/react";
 
 export default function Package({
     manifestItem,
