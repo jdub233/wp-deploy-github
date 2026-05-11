@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
+import { Popover, Portal, Box, Stack, Button, Text } from "@chakra-ui/react";
 
 export default function Package({
     manifestItem,
@@ -172,40 +172,153 @@ export default function Package({
                         <span className="info-label">Refspec:</span>
                                 <input type="text" onChange={handleRefSpecChange} className="current-refspec" value={manifestItem.refspec} />
                         {  (repoTags.tags?.length > 0 || repoTags.branches?.length > 0) &&
-                            <Popover 
-                                placement='right'
-                                isOpen={isPopoverOpen}
-                                onOpenChange={setIsPopoverOpen}
+                            <Popover.Root
+                                open={isPopoverOpen}
+                                onOpenChange={(e) => setIsPopoverOpen(e.open)}
+                                positioning={{ placement: "right" }}
                             >
-                                <PopoverTrigger>
-                                    <span className="info-icon">&#9432;</span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                    <div className="ref-2-columns" style={{display: 'flex', flexDirection: 'row'}}>
-                                        <div className='package-tags'>
-                                            <h4>Tags</h4>
-                                            <ul>
-                                                {repoTags.tags.map((tag, index) => (
-                                                    <li key={tag.sha}>
-                                                        <button onClick={() => handleTagClick(tag)}> {tag.name} </button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                        <div className='package-branches'>
-                                            <h4>Branches</h4>
-                                            <ul>
-                                                {repoTags.branches.map((branch, index) => (
-                                                    <li key={branch.sha}>
-                                                        <button onClick={() => handleTagClick(branch)}> {branch.name} </button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </PopoverContent>
-                            </Popover>
+                                <Popover.Trigger asChild>
+                                    <button
+                                        type="button"
+                                        className="info-icon"
+                                        aria-label="Show available tags and branches"
+                                        style={{
+                                            cursor: "pointer",
+                                            background: "none",
+                                            border: "none",
+                                            padding: 0,
+                                        }}
+                                     >
+                                         &#9432;
+                                     </button>
+                                </Popover.Trigger>
+                                <Portal>
+                                    <Popover.Positioner>
+                                        <Popover.Content width="600px" maxHeight="500px">
+                                            <Popover.Body padding="0">
+                                                <Stack direction="row" gap="0" height="100%">
+                                                    {/* Tags Column */}
+                                                    <Box 
+                                                        flex="1" 
+                                                        padding="4" 
+                                                        borderRightWidth="1px" 
+                                                        borderRightColor="gray.200"
+                                                    >
+                                                        <Text 
+                                                            fontSize="xs" 
+                                                            fontWeight="semibold" 
+                                                            color="gray.600" 
+                                                            textTransform="uppercase" 
+                                                            letterSpacing="wider"
+                                                            marginBottom="3"
+                                                        >
+                                                            Tags
+                                                        </Text>
+                                                        <Box 
+                                                            maxHeight="420px" 
+                                                            overflowY="auto"
+                                                            css={{
+                                                                '&::-webkit-scrollbar': {
+                                                                    width: '8px',
+                                                                },
+                                                                '&::-webkit-scrollbar-track': {
+                                                                    background: '#f1f1f1',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb': {
+                                                                    background: '#cbd5e0',
+                                                                    borderRadius: '4px',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb:hover': {
+                                                                    background: '#a0aec0',
+                                                                },
+                                                            }}
+                                                        >
+                                                            <Stack gap="1">
+                                                                {repoTags.tags.map((tag) => (
+                                                                    <Button
+                                                                        key={tag.sha}
+                                                                        onClick={() => handleTagClick(tag)}
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                        width="full"
+                                                                        justifyContent="flex-start"
+                                                                        fontFamily="mono"
+                                                                        fontSize="xs"
+                                                                        height="auto"
+                                                                        padding="2"
+                                                                        _hover={{
+                                                                            bg: 'blue.50',
+                                                                            borderColor: 'blue.400',
+                                                                        }}
+                                                                    >
+                                                                        {tag.name}
+                                                                    </Button>
+                                                                ))}
+                                                            </Stack>
+                                                        </Box>
+                                                    </Box>
+                                                    
+                                                    {/* Branches Column */}
+                                                    <Box flex="1" padding="4">
+                                                        <Text 
+                                                            fontSize="xs" 
+                                                            fontWeight="semibold" 
+                                                            color="gray.600" 
+                                                            textTransform="uppercase" 
+                                                            letterSpacing="wider"
+                                                            marginBottom="3"
+                                                        >
+                                                            Branches
+                                                        </Text>
+                                                        <Box 
+                                                            maxHeight="420px" 
+                                                            overflowY="auto"
+                                                            css={{
+                                                                '&::-webkit-scrollbar': {
+                                                                    width: '8px',
+                                                                },
+                                                                '&::-webkit-scrollbar-track': {
+                                                                    background: '#f1f1f1',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb': {
+                                                                    background: '#cbd5e0',
+                                                                    borderRadius: '4px',
+                                                                },
+                                                                '&::-webkit-scrollbar-thumb:hover': {
+                                                                    background: '#a0aec0',
+                                                                },
+                                                            }}
+                                                        >
+                                                            <Stack gap="1">
+                                                                {repoTags.branches.map((branch) => (
+                                                                    <Button
+                                                                        key={branch.sha}
+                                                                        onClick={() => handleTagClick(branch)}
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                        width="full"
+                                                                        justifyContent="flex-start"
+                                                                        fontFamily="mono"
+                                                                        fontSize="xs"
+                                                                        height="auto"
+                                                                        padding="2"
+                                                                        _hover={{
+                                                                            bg: 'blue.50',
+                                                                            borderColor: 'blue.400',
+                                                                        }}
+                                                                    >
+                                                                        {branch.name}
+                                                                    </Button>
+                                                                ))}
+                                                            </Stack>
+                                                        </Box>
+                                                    </Box>
+                                                </Stack>
+                                            </Popover.Body>
+                                        </Popover.Content>
+                                    </Popover.Positioner>
+                                </Portal>
+                            </Popover.Root>
                         }
                     </div>
                 }

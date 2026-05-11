@@ -4,6 +4,20 @@
 .button.continue-anyway {
   font-size: 12px; }
 
+/* Phase 1a: Chakra CSS Reset Compatibility Patch (2026-03-23)
+ * Chakra's reset removes default input borders. Legacy CSS only styled inputs
+ * inside <fieldset>, but package.js uses plain <div>. This patch restores
+ * borders until Phase 1b converts inputs to Chakra components.
+ * DELETE THIS BLOCK in Phase 1b when converting to Chakra Input components. */
+.expanded-info input[type="text"],
+.expanded-info input[type="radio"] {
+  border: 1px solid #ccc;
+}
+.expanded-info input[type="text"] {
+  padding: 2px 3px;
+}
+/* End Phase 1a patch */
+
 #main .container .left fieldset input[type="text"].current-refspec {
   width: 100px; }
 #main .container .left .manifest-packages-outer {
