@@ -24,11 +24,12 @@ export const authOptions = {
             // Add GitHub ID from the token to session
             session.user.githubId = token.githubId;
 
-            // Check if the user is a collaborator based on their GitHub ID
-            const isCollaborator = await checkIsCollaborator(session.user.githubId);
+            // Check if the user is a collaborator and get their login
+            const collaboratorData = await checkIsCollaborator(session.user.githubId);
 
-            // Add the collaborator status to the session
-            session.isCollaborator = isCollaborator;
+            // Add the collaborator status and login to the session
+            session.isCollaborator = collaboratorData.isCollaborator;
+            session.user.login = collaboratorData.login;
 
             // Return the session
             return session;

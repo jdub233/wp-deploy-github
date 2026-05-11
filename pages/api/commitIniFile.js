@@ -3,22 +3,16 @@ import { authOptions } from './auth/[...nextauth]';
 
 import ini from "ini";
 
-import checkIsCollaborator from './auth/lib/checkIsCollaborator';
-
 import { getCurrentESTDateTimeString } from '../../lib/getCurrentESTDateTimeString';
 import { commitToRepo } from '../../lib/commitToRepo';
-import { getGithubLogin } from '../../lib/getGithubLogin';
 
 export default async function handler(req, res) {
 
     // Get the session
     const session = await getServerSession(req, res, authOptions);
 
-    // Server-side session doesn't get the collaborator status, so we need to check it again.
-    const isCollaborator = await checkIsCollaborator(session.user.image);
-
     // Wrap an authorization check around the API route.
-    if (session && isCollaborator) {
+    if (session && session.isCollaborator) {
         if (req.method === 'POST') {
             const { query: { path }, body } = req;
 
@@ -42,8 +36,8 @@ export default async function handler(req, res) {
             // Add spaces around the "=" sign
             iniString = iniString.replace(/=/g, ' = ');
 
-            // Get the Github login name for the user
-            const githubLogin = await getGithubLogin(session.user.image);
+            // Get the Github login name from the session
+            const githubLogin = session.user.login;
 
             // Prepend the build information to the ini file
             const iniFile = `; BUILD ${getCurrentESTDateTimeString()}-cms\n` 
