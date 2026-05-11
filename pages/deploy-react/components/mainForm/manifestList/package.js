@@ -178,7 +178,19 @@ export default function Package({
                                 positioning={{ placement: "right" }}
                             >
                                 <Popover.Trigger asChild>
-                                    <span className="info-icon" style={{ cursor: "pointer" }}>&#9432;</span>
+                                    <button
+                                        type="button"
+                                        className="info-icon"
+                                        aria-label="Show available tags and branches"
+                                        style={{
+                                            cursor: "pointer",
+                                            background: "none",
+                                            border: "none",
+                                            padding: 0,
+                                        }}
+                                     >
+                                         &#9432;
+                                     </button>
                                 </Popover.Trigger>
                                 <Portal>
                                     <Popover.Positioner>
