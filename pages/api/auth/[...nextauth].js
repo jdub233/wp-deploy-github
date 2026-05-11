@@ -3,7 +3,7 @@ import GithubProvider from "next-auth/providers/github";
 
 import checkIsCollaborator from "./lib/checkIsCollaborator";
 
-export default NextAuth({
+export const authOptions = {
     providers: [
         GithubProvider({
             clientId: process.env.GITHUB_ID,
@@ -34,4 +34,6 @@ export default NextAuth({
             return session;
         },
     },
-});
+};
+
+export default NextAuth(authOptions);
