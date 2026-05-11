@@ -17,6 +17,7 @@ export default function MainForm() {
 
     // Validation
     const [validationResults, setValidationResults] = useState({});
+    const [isCommitting, setIsCommitting] = useState(false);
 
 
     // Manifest state
@@ -145,6 +146,7 @@ export default function MainForm() {
 
     // Commit the working manifest to the appropriate ini file.
     async function commitWorkingManifest() {
+        setIsCommitting(true);
 
         // Distinguish between sandboxes and other installs like blogs and cms.
         const fileRoot = (install == 'sandbox') ? sandbox : install;
@@ -158,14 +160,19 @@ export default function MainForm() {
             body: JSON.stringify({ message: commitMessage, manifest: workingManifest}),
         });
 
+        setIsCommitting(false);
+
         // Display the response to the user.
         console.log('commitResponse:', commitResponse);
    
-        // Temp ui feedback using browser alert
+        // Provide feedback and link to GitHub Actions
         if (commitResponse.status === 200) {
-            alert('Commit successful!');
+            const actionsUrl = `https://github.com/${process.env.NEXT_PUBLIC_MANIFEST_REPO}/actions`;
+            alert(`Commit successful!\n\nView build status at:\n${actionsUrl}`);
+            // Reload page to clear state and show fresh data
+            window.location.reload();
         } else {
-            alert('Error committing file');
+            alert('Error committing file. Please check the console for details.');
         }
 
     }
@@ -290,6 +297,7 @@ export default function MainForm() {
                     env={env}
                     install={install}
                     commitWorkingManifest={commitWorkingManifest}
+                    isCommitting={isCommitting}
                 />
 
             </form>

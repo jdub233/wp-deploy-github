@@ -17,7 +17,7 @@ const customStyles = {
 
 Modal.setAppElement('#__next');
 
-export default function ConfirmationModal({handleValidate, cancelValidation, validationResults = {}, env, install, commitWorkingManifest }) {
+export default function ConfirmationModal({handleValidate, cancelValidation, validationResults = {}, env, install, commitWorkingManifest, isCommitting = false }) {
     const numChangedPackages = 
         (validationResults.changed_packages?.length ?? 0) + 
         (validationResults.removed_packages?.length ?? 0) + 
@@ -69,8 +69,28 @@ export default function ConfirmationModal({handleValidate, cancelValidation, val
                     </div>
                 </div>
                 <div className="button-row">
-                    <button className="button primary pull-right" onClick={handleDeploy}>Deploy updates for {numChangedPackages} packages</button>
-                    <button className="button secondary" onClick={cancelValidation}>Cancel</button>
+                    <button 
+                        className="button primary pull-right" 
+                        onClick={handleDeploy}
+                        disabled={isCommitting}
+                        style={{
+                            backgroundColor: isCommitting ? '#999' : '',
+                            cursor: isCommitting ? 'not-allowed' : 'pointer'
+                        }}
+                    >
+                        {isCommitting ? 'Deploying...' : `Deploy updates for ${numChangedPackages} packages`}
+                    </button>
+                    <button 
+                        className="button secondary" 
+                        onClick={cancelValidation}
+                        disabled={isCommitting}
+                        style={{
+                            backgroundColor: isCommitting ? '#999' : '',
+                            cursor: isCommitting ? 'not-allowed' : 'pointer'
+                        }}
+                    >
+                        Cancel
+                    </button>
                 </div>
             </div>
             }
