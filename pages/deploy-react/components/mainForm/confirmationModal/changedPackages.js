@@ -1,42 +1,44 @@
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { HiArrowCircleRight, HiArrowSmRight } from "react-icons/hi";
 
-export default function ChangedPackages({changedPackages}) {
-
-    if (!changedPackages || changedPackages.length === 0) {
-        return null;
-    }
-
+export default function ChangedPackages({ changedPackages }) {
+    if (!changedPackages || changedPackages.length === 0) return null;
     return (
-        <div className="package-list changed-packages">
-            <h3>Changed Packages</h3>
-            <ul>
+        <Box mb="4">
+            <Text fontSize="lg" fontWeight="bold" mb="2">Changed Packages</Text>
+            <Box as="ul" listStyleType="none" m="0" p="0">
                 {changedPackages.map((pkg, index) => (
                     <ChangedPackage key={index} pkg={pkg} />
                 ))}
-            </ul>
-        </div>
+            </Box>
+        </Box>
     );
 }
 
-function ChangedPackage({pkg}) {
-
+function ChangedPackage({ pkg }) {
     return (
-        <li className="package changed" >
-            <h4>
-            <HiArrowCircleRight />{pkg.id}
-            </h4>
-            <ul>
-                { pkg.changed_attributes?.refspec && 
-                    <li>
-                        refspec: <span className="old-value">{pkg.old_attributes.refspec}</span> <HiArrowSmRight /> <span className="new-value">{pkg.changed_attributes.refspec}</span>
-                    </li>
-                }
-                { pkg.changed_attributes?.rev &&
-                    <li>
-                        rev: <span className="old-value">{pkg.old_attributes.rev.substring(0,10)}</span> <HiArrowSmRight /> <span className="new-value">{pkg.changed_attributes.rev.substring(0,10)}</span>
-                    </li>
-                }
-            </ul>
-        </li>
+        <Box as="li" mb="3">
+            <Flex align="center" gap="1" fontWeight="bold" color="orange.500" mb="1">
+                <HiArrowCircleRight /> {pkg.id}
+            </Flex>
+            <Box as="ul" ml="4" pl="4" listStyleType="disc">
+                {pkg.changed_attributes?.refspec && (
+                    <Box as="li" fontSize="sm" my="1">
+                        refspec:{' '}
+                        <Text as="span" fontStyle="italic" color="gray.500">{pkg.old_attributes.refspec}</Text>
+                        {' '}<HiArrowSmRight style={{ display: 'inline', verticalAlign: 'middle' }} />{' '}
+                        <Text as="span" fontWeight="bold">{pkg.changed_attributes.refspec}</Text>
+                    </Box>
+                )}
+                {pkg.changed_attributes?.rev && (
+                    <Box as="li" fontSize="sm" my="1">
+                        rev:{' '}
+                        <Text as="span" fontStyle="italic" color="gray.500">{pkg.old_attributes.rev.substring(0, 10)}</Text>
+                        {' '}<HiArrowSmRight style={{ display: 'inline', verticalAlign: 'middle' }} />{' '}
+                        <Text as="span" fontWeight="bold">{pkg.changed_attributes.rev.substring(0, 10)}</Text>
+                    </Box>
+                )}
+            </Box>
+        </Box>
     );
 }

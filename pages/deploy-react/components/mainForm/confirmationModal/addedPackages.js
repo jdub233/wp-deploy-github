@@ -1,34 +1,33 @@
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { HiPlusCircle } from "react-icons/hi";
 
-export default function AddedPackages({addedPackages}) {
-
-    if (!addedPackages || addedPackages.length === 0) {
-        return null;
-    }
-
+export default function AddedPackages({ addedPackages }) {
+    if (!addedPackages || addedPackages.length === 0) return null;
     return (
-        <div className="package-list added-packages">
-            <h3>Added Packages</h3>
-            <ul>
+        <Box mb="4">
+            <Text fontSize="lg" fontWeight="bold" mb="2">Added Packages</Text>
+            <Box as="ul" listStyleType="none" m="0" p="0">
                 {addedPackages.map((pkg, index) => (
                     <AddedPackage key={index} pkg={pkg} />
                 ))}
-            </ul>
-        </div>
+            </Box>
+        </Box>
     );
 }
 
 function AddedPackage({ pkg: { id, changed_attributes: { scm, source, refspec, rev, dest } } }) {
     return (
-        <li className="package added">
-            <h4><HiPlusCircle /> {id}</h4>
-            <ul>
-                <li>scm: {scm}</li>
-                <li>source: {source}</li>
-                {scm === 'git' && <li>refspec: {refspec}</li>}
-                <li>rev: {rev}</li>
-                <li>dest: {dest}</li>
-            </ul>
-        </li>
+        <Box as="li" mb="3">
+            <Flex align="center" gap="1" fontWeight="bold" color="green.600" mb="1">
+                <HiPlusCircle /> {id}
+            </Flex>
+            <Box as="ul" ml="4" pl="4" listStyleType="disc" fontSize="sm">
+                <Box as="li" my="1">scm: {scm}</Box>
+                <Box as="li" my="1">source: {source}</Box>
+                {scm === 'git' && <Box as="li" my="1">refspec: {refspec}</Box>}
+                <Box as="li" my="1">rev: {rev}</Box>
+                <Box as="li" my="1">dest: {dest}</Box>
+            </Box>
+        </Box>
     );
 }

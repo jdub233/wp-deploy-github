@@ -1,26 +1,13 @@
-import Modal from 'react-modal';
-
+import { Dialog, Button, Box, Flex, Text, Portal } from "@chakra-ui/react";
 import ChangedPackages from './confirmationModal/changedPackages';
 import RemovedPackages from './confirmationModal/removedPackages';
 import AddedPackages from './confirmationModal/addedPackages';
 
-const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-      },
-};
-
-Modal.setAppElement('#__next');
-
-export default function ConfirmationModal({handleValidate, cancelValidation, validationResults = {}, env, install, commitWorkingManifest, isCommitting = false }) {
-    const numChangedPackages = 
-        (validationResults.changed_packages?.length ?? 0) + 
-        (validationResults.removed_packages?.length ?? 0) + 
+export default function ConfirmationModal({ handleValidate, cancelValidation, validationResults = {}, env, install, commitWorkingManifest, isCommitting = false }) {
+    const isOpen = Object.keys(validationResults).length !== 0;
+    const numChangedPackages =
+        (validationResults.changed_packages?.length ?? 0) +
+        (validationResults.removed_packages?.length ?? 0) +
         (validationResults.added_packages?.length ?? 0);
 
     function handleDeploy(event) {
@@ -29,73 +16,73 @@ export default function ConfirmationModal({handleValidate, cancelValidation, val
     }
 
     return (
-        <div className="confimation_modal">
-            <div className="button-row">
-                <button id="task_confirm_button" onClick={handleValidate} className="button primary show-modal">Validate</button>
-            </div >
+        <Box>
+            <Box mb="4">
+                <Button colorPalette="blue" onClick={handleValidate}>Validate</Button>
+            </Box>
 
-            <Modal
-                isOpen={Object.keys( validationResults ).length != 0}
-                onRequestClose={cancelValidation}
-                style={customStyles}
+            <Dialog.Root
+                open={isOpen}
+                onOpenChange={(e) => { if (!e.open && !isCommitting) cancelValidation(); }}
             >
-
-            { Object.keys( validationResults ).length != 0 &&
-
-            <div id="task_confirm" className="reveal-modal">
-                <div className="confirmation-status confirmation-success">
-                    <h1>Validation results</h1>
-                    <p>You are about to build <span className="full_change_count">{numChangedPackages}</span> update{numChangedPackages > 1 ? 's' : ''} for 
-                        <span className="destination_install"> {install}</span> on <span
-                            className="destination_environment"> {env}</span>.
-                    </p>
-                    <div className="package-summary">
-                        <span className="packages-changed"><span className="packages-changed-count">{validationResults.changed_packages.length} </span>
-                            Changed</span> &nbsp;
-                        <span className="packages-added"><span className="packages-added-count">{validationResults.added_packages.length} </span>
-                            Added</span> &nbsp;
-                        <span className="packages-removed"><span className="packages-removed-count">{validationResults.removed_packages.length} </span>
-                            Removed</span>
-                    </div>
-                    <div id="validate-modal-success-tabs">
-                        <ul>
-                            <li>&nbsp;</li>
-                        </ul>
-                        <div id="tab-summary-view">
-                            <ChangedPackages changedPackages={validationResults.changed_packages} />
-                            <RemovedPackages removedPackages={validationResults.removed_packages} />
-                            <AddedPackages addedPackages={validationResults.added_packages} />
-                        </div>
-                    </div>
-                </div>
-                <div className="button-row">
-                    <button 
-                        className="button primary pull-right" 
-                        onClick={handleDeploy}
-                        disabled={isCommitting}
-                        style={{
-                            backgroundColor: isCommitting ? '#999' : '',
-                            cursor: isCommitting ? 'not-allowed' : 'pointer'
-                        }}
-                    >
-                        {isCommitting ? 'Deploying...' : `Deploy updates for ${numChangedPackages} packages`}
-                    </button>
-                    <button 
-                        className="button secondary" 
-                        onClick={cancelValidation}
-                        disabled={isCommitting}
-                        style={{
-                            backgroundColor: isCommitting ? '#999' : '',
-                            cursor: isCommitting ? 'not-allowed' : 'pointer'
-                        }}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
-            }
-
-            </Modal>
-        </div>
+                <Portal>
+                    <Dialog.Backdrop bg="blackAlpha.600" />
+                    <Dialog.Positioner display="flex" alignItems="center" justifyContent="center">
+                        <Dialog.Content maxW="640px" shadow="2xl" rounded="md">
+                            <Dialog.Header px="6" pt="5" pb="4" bg="gray.100" roundedTop="md" borderBottomWidth="1px" borderColor="gray.200">
+                                <Dialog.Title fontSize="3xl" fontWeight="bold">Validation results</Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body bg="gray.200" px="4" py="4">
+                                {isOpen && (
+                                    <>
+                                        <Text mb="2" px="2">
+                                            You are about to build{' '}
+                                            <Text as="span" fontWeight="bold">{numChangedPackages}</Text>{' '}
+                                            update{numChangedPackages !== 1 ? 's' : ''} for{' '}
+                                            <Text as="span" fontWeight="bold">{install}</Text> on{' '}
+                                            <Text as="span" fontWeight="bold">{env}</Text>.
+                                        </Text>
+                                        <Flex gap="4" mb="3" px="2">
+                                            <Text fontWeight="bold" color="orange.500">
+                                                {validationResults.changed_packages.length} Changed
+                                            </Text>
+                                            <Text fontWeight="bold" color="green.600">
+                                                {validationResults.added_packages.length} Added
+                                            </Text>
+                                            <Text fontWeight="bold" color="red.500">
+                                                {validationResults.removed_packages.length} Removed
+                                            </Text>
+                                        </Flex>
+                                        <Box bg="white" rounded="md" borderWidth="1px" borderColor="gray.200" px="5" py="4" overflowY="auto" maxH="360px">
+                                            <ChangedPackages changedPackages={validationResults.changed_packages} />
+                                            <RemovedPackages removedPackages={validationResults.removed_packages} />
+                                            <AddedPackages addedPackages={validationResults.added_packages} />
+                                        </Box>
+                                    </>
+                                )}
+                            </Dialog.Body>
+                            <Dialog.Footer px="6" pt="4" pb="5" bg="gray.50" roundedBottom="md" borderTopWidth="1px" borderColor="gray.200" gap="3">
+                                <Button
+                                    colorPalette="blue"
+                                    onClick={handleDeploy}
+                                    disabled={isCommitting}
+                                    loading={isCommitting}
+                                    loadingText="Deploying..."
+                                >
+                                    Deploy {numChangedPackages} {numChangedPackages !== 1 ? 'updates' : 'update'}
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={cancelValidation}
+                                    disabled={isCommitting}
+                                >
+                                    Cancel
+                                </Button>
+                            </Dialog.Footer>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
+        </Box>
     );
 }
