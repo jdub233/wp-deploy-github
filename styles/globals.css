@@ -207,48 +207,7 @@
       #main .container .left .manifest-packages-outer .manifest-results-wrapper .add-new-package #go-add-new-package {
         padding: 5px 20px;
         font-size: 0.9em; }
-  #main .container .left .manifest-packages-outer .manifest-list-ui-controls {
-    /* display: none; */
-    float: right;
-    width: 30%; }
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls .list-ui-controls-inner {
-      padding-left: 10px;
-      margin-top: 48px; }
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls input,
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls button {
-      background: #fff;
-      border-radius: 2px;
-      width: 100%;
-      max-width: 200px;
-      padding: 10px;
-      display: block; }
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls input {
-      margin: auto;
-      margin-bottom: 20px;
-      margin-top: 0;
-      border: solid 1px gray; }
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls button {
-      margin: 10px auto;
-      font-size: 0.9em;
-      word-wrap: break-word;
-      cursor: pointer;
-      border: none;
-      border-left: solid 6px white; }
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls .manifest-list-filter {
-      padding: 1.2em;
-      word-wrap: break-word; }
-      #main .container .left .manifest-packages-outer .manifest-list-ui-controls .manifest-list-filter.filter-active {
-        border-left: solid 6px #05789f;
-        background-color: #d8f4fe; }
-      #main .container .left .manifest-packages-outer .manifest-list-ui-controls .manifest-list-filter:hover, #main .container .left .manifest-packages-outer .manifest-list-ui-controls .manifest-list-filter:focus {
-        border-color: #05789f;
-        border-left: solid 6px #05789f; }
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls .manifest-list-action {
-      border: solid 1px #c20000; }
-      #main .container .left .manifest-packages-outer .manifest-list-ui-controls .manifest-list-action:hover {
-        background: #ffdddd; }
-    #main .container .left .manifest-packages-outer .manifest-list-ui-controls .manifest-list-fetch-prod {
-      margin-top: 40px; }
+/* manifestListUIControls CSS zone deleted — converted to Chakra Box/VStack/Input/Button in manifestListUIControls.js */
   #main .container .left .manifest-packages-outer .use-classic-label {
     cursor: pointer;
     color: #079dd0;
