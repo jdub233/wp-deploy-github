@@ -9,8 +9,8 @@ export default function Header() {
         <Link href="/">
           <Image
             src="/bu-wp-deploy-tool-logo.png"
-                            alt="Logo"
-                            width={443}
+            alt="Logo"
+            width={443}
             height={22}
           />
         </Link>
