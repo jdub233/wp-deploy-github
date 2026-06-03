@@ -1109,23 +1109,7 @@ input[type="checkbox"]:checked + label, input[type="radio"]:checked + label {
   align-self: auto;
 }
 
-/* line 759, style.scss */
-#footer {
-  width: 100%;
-}
-/* line 762, style.scss */
-#footer .master-plate {
-  float: left;
-  margin: 33px 0 20px 0;
-}
-/* line 767, style.scss */
-#footer .meta {
-  float: right;
-  margin: 1.5em 0;
-  color: gray;
-  text-align: right;
-  font-size: .90em;
-}
+/* footer CSS zone deleted — converted to Chakra Box in footer.js */
 
 /* header/footer .wrapper padding deleted — both converted to Chakra Container */
 
