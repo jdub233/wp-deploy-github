@@ -627,132 +627,7 @@ input[type="checkbox"]:checked + label, input[type="radio"]:checked + label {
   left: -9999em;
 }
 
-/* line 123, style.scss */
-header {
-  height: 65px;
-  width: 100%;
-}
-/* line 127, style.scss */
-header .logo {
-  float: left;
-  width: 460px;
-  color: white;
-  margin: 1.5em 0 0 0;
-}
-/* line 135, style.scss */
-header .logo p a {
-  color: inherit;
-  text-decoration: none;
-}
-/* line 140, style.scss */
-header .logo p a:hover {
-  color: white !important;
-  text-decoration: none;
-}
-/* line 147, style.scss */
-header .shortcuts {
-  float: right;
-  margin: 0;
-}
-/* line 151, style.scss */
-header .shortcuts ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-/* line 156, style.scss */
-header .shortcuts ul li {
-  float: left;
-  display: inline;
-}
-/* line 160, style.scss */
-header .shortcuts ul li a {
-  color: #aaaaaa;
-  text-decoration: none;
-  display: block;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border-radius: 50%;
-  margin-top: 15px;
-  margin-right: 5px;
-  border: 1px solid transparent;
-  position: relative;
-}
-/* line 175, style.scss */
-header .shortcuts ul li a:hover, header .shortcuts ul li a:focus {
-  color: white !important;
-}
-/* line 179, style.scss */
-header .shortcuts ul li a.active {
-  color: #079dd0 !important;
-}
-/* line 183, style.scss */
-header .shortcuts ul li .at {
-  position: absolute;
-  left: -9999em;
-  background: black;
-  padding: 2px 6px;
-  border-radius: 3px;
-  top: 4em;
-  color: white;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-  font-size: .9em;
-  width: 100px;
-}
-/* line 196, style.scss */
-header .shortcuts ul li .at:before {
-  content: " ";
-  display: block;
-  width: 8px;
-  height: 8px;
-  background: black;
-  position: absolute;
-  top: 0;
-  margin-top: -4px;
-  left: 50%;
-  margin-left: -4px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-/* line 214, style.scss */
-header .shortcuts ul li .at.showing {
-  left: 50%;
-  margin-left: -54px;
-}
-/* line 222, style.scss */
-header .toolbar {
-  float: right;
-  color: white;
-  text-align: right;
-  margin: 0;
-}
-/* line 230, style.scss */
-header .toolbar ul li {
-  display: inline;
-  float: left;
-}
-/* line 234, style.scss */
-header .toolbar ul li a {
-  display: block;
-  height: 50px;
-  width: 50px;
-  line-height: 50px;
-  font-size: .80em;
-  text-decoration: none;
-  color: #aaaaaa;
-  text-align: center;
-  margin-top: 10px;
-}
-/* line 246, style.scss */
-header .toolbar ul li a:hover {
-  color: white !important;
-  text-decoration: underline;
-}
+/* header CSS zone deleted — converted to Chakra Box in header.js */
 
 /* line 255, style.scss */
 #main {
@@ -1252,10 +1127,7 @@ header .toolbar ul li a:hover {
   font-size: .90em;
 }
 
-/* line 778, style.scss */
-header .wrapper, #footer .wrapper {
-  padding: 0 3em 0 3em;
-}
+/* header/footer .wrapper padding deleted — both converted to Chakra Container */
 
 /* line 783, style.scss */
 .sandbox-chooser {
