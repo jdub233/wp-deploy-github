@@ -4,22 +4,7 @@
 .button.continue-anyway {
   font-size: 12px; }
 
-/* Phase 1a: Chakra CSS Reset Compatibility Patch (2026-03-23)
- * Chakra's reset removes default input borders. Legacy CSS only styled inputs
- * inside <fieldset>, but package.js uses plain <div>. This patch restores
- * borders until Phase 1b converts inputs to Chakra components.
- * DELETE THIS BLOCK in Phase 1b when converting to Chakra Input components. */
-.expanded-info input[type="text"],
-.expanded-info input[type="radio"] {
-  border: 1px solid #ccc;
-}
-.expanded-info input[type="text"] {
-  padding: 2px 3px;
-}
-/* End Phase 1a patch */
-
-#main .container .left fieldset input[type="text"].current-refspec {
-  width: 100px; }
+/* package.js CSS zone deleted — converted to Chakra Box/Flex/Input in package.js (Phase 1a patch also removed) */
 #main .container .left .manifest-packages-outer {
   min-height: 150px; }
   #main .container .left .manifest-packages-outer div {
@@ -69,104 +54,7 @@
     #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results {
       max-height: 600px;
       overflow: auto; }
-      #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing {
-        margin-bottom: 10px;
-        border: solid 1px #ccc;
-        border-radius: 2px;
-        padding: 5px;
-        margin-right: 15px;
-        background: #fff;
-        min-width: 450px;
-        clear: both !important;
-        display: block; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .summary-info .layout {
-          float: left;
-          display: inline-block; }
-          #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .summary-info .layout.favorite-star, #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .summary-info .layout.expand-arrow {
-            float: right;
-            cursor: pointer; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .summary-info .favorite-star {
-          padding: 0.3em 0.7em;
-          font-size: 1.5em; }
-          #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .summary-info .favorite-star .star {
-            display: none;
-            transition-duration: 0.25s;
-            -webkit-transition-duration: 0.25s;
-            /* Safari */ }
-            #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .summary-info .favorite-star .star.active {
-              display: inline; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .summary-info .star-outline {
-          color: gray; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .expanded-info {
-          display: none;
-          padding: 5px 12px 10px;
-          position: relative; }
-          #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .expanded-info .refspec-line {
-           /* display: none; */
-          }
-          #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .expanded-info .set-one-rev-to-prod {
-            display: none;
-            color: blue;
-            cursor: pointer; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .remove-package {
-          float: right;
-          position: absolute;
-          bottom: 10px;
-          right: 10px;
-          font-size: 0.8em; }
-          #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .remove-package .do-remove {
-            color: red;
-            cursor: pointer; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing span.info-label {
-          min-width: 100px;
-          display: inline-block; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .expand-arrow {
-          padding-top: 16px; }
-          #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .expand-arrow .open {
-            display: none; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .repo-icon {
-          max-height: 40px;
-          margin: 3px 10px 0 8px; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .pkg-details {
-          font-size: .8em; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing h3 {
-          font-size: 1em;
-          margin: 5px 0; }
-          #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing h3.popover-title {
-            margin: 0;
-            padding: 8px 14px;
-            font-size: 14px;
-            font-weight: normal;
-            line-height: 18px;
-            background-color: #f7f7f7;
-            border-bottom: 1px solid #ebebeb;
-            border-radius: 5px 5px 0 0;
-            color: #000; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing p {
-          margin: 0;
-          max-width: 320px;
-          padding-bottom: 10px;
-          word-wrap: break-word; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .git-tags-loading,
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .git-branches-loading {
-          display: none; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing .git-commit-info {
-          margin-bottom: -3px;
-          padding-right: 12px; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.current-version h3 {
-          /*color: green;*/ }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.current-version .current-rev {
-          /*color:green;*/ }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.wrong-scm {
-          background-color: #F6CECE; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.off-master .set-one-rev-to-prod, #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.old-version .set-one-rev-to-prod {
-          display: inline; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.off-master h3 {
-          color: blue; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.old-version h3 {
-          color: red; }
-        #main .container .left .manifest-packages-outer .manifest-results-wrapper #manifest-list-results .package-listing.old-version .prod-rev {
-          font-weight: bold; }
+      /* package-listing CSS zone deleted — converted to Chakra Box/Flex/Input in package.js */
     #main .container .left .manifest-packages-outer .manifest-results-wrapper .add-new-package {
       display: none;
       margin: 10px 0; }
