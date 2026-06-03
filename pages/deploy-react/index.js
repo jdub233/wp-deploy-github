@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-
+import { Box, Container, Text } from "@chakra-ui/react";
 import { ImHammer } from "react-icons/im";
 
 import Header from "./components/header";
@@ -17,16 +17,14 @@ export default function Deploy() {
     return (
         <>
             <Header />
-            <div id="main" role="main">
-                <div className="container" style={{marginLeft: '2em'}}>
-                    <div className="left">
-                        <div className="title">
-                            <h1><ImHammer /> Deploy</h1>
-                        </div>
-                        <MainForm />
-                    </div>
-                </div>
-            </div>
+            <Box bg="gray.50">
+                <Container maxWidth="container.xl" px="8" py="6">
+                    <Text as="h1" fontSize="3xl" fontWeight="bold" mb="6" display="flex" alignItems="center" gap="3">
+                        <Box as={ImHammer} display="inline-block" boxSize="0.85em" /> Deploy
+                    </Text>
+                    <MainForm />
+                </Container>
+            </Box>
             <Footer />
         </>
     );

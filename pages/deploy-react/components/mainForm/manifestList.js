@@ -48,11 +48,29 @@ export default function ManifestList({
     }
 
     return (
-        <fieldset>
-            <legend><span className="step">2</span>Manifest Packages</legend>
-            <p>
+        <Box borderTopWidth="1px" borderColor="gray.300" pt="8" mb="8">
+            <Flex align="center" mb="3">
+                <Box
+                    bg="orange.400"
+                    rounded="full"
+                    w="7"
+                    h="7"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    color="white"
+                    fontWeight="bold"
+                    fontSize="sm"
+                    mr="2"
+                    flexShrink={0}
+                >
+                    2
+                </Box>
+                <Text fontSize="lg" fontWeight="bold" textTransform="uppercase">Manifest Packages</Text>
+            </Flex>
+            <Text fontSize="sm" color="gray.600" mb="5" ml="9">
                 Make any adjustments or modifications to the manifest file to fine-tune this build.
-            </p>
+            </Text>
             <Box
                 position="relative"
                 minHeight="150px"
@@ -105,6 +123,6 @@ export default function ManifestList({
                     )}
                 </Flex>
             </Box>
-        </fieldset>
+        </Box>
     );
 }

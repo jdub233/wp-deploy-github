@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 
 import { compareManifests } from "../../../lib/compareManifests";
 
@@ -55,7 +56,7 @@ export default function MainForm() {
                     console.error("Failed to fetch environment installs:", error);
                 }
             };
-    
+
             fetchData();
         }
     }, []);
@@ -135,7 +136,7 @@ export default function MainForm() {
             // If there are changes, then display a modal to the user with the changes.
             // The modal should have a button to confirm the changes, which will then trigger the build process.
             // The modal should also have a button to cancel the changes, which will then dismiss the modal.
-       
+
             setValidationResults(comparison);
 
     }
@@ -164,7 +165,7 @@ export default function MainForm() {
 
         // Display the response to the user.
         console.log('commitResponse:', commitResponse);
-   
+
         // Provide feedback and link to GitHub Actions
         if (commitResponse.status === 200) {
             const actionsUrl = `https://github.com/${process.env.NEXT_PUBLIC_MANIFEST_REPO}/actions`;
@@ -177,105 +178,152 @@ export default function MainForm() {
 
     }
 
+    const envOptions = [
+        { value: "devl", label: "Development" },
+        { value: "test", label: "Test" },
+        { value: "syst", label: "Systems" },
+        { value: "prod", label: "Production" },
+        { value: "cloud", label: "Cloud" },
+    ];
+
     return (
-        <div id="preexisting" className="tab-content">
-            <form id="form_build_old">
-                <fieldset className="border-top step-1">
-                    <legend><span className="step">1</span> Parameters</legend>
-                    <p>
+        <Box>
+            <form>
+                <Box borderTopWidth="1px" borderColor="gray.300" pt="8" mb="8">
+                    <Flex align="center" mb="3">
+                        <Box
+                            bg="orange.400"
+                            rounded="full"
+                            w="7"
+                            h="7"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            color="white"
+                            fontWeight="bold"
+                            fontSize="sm"
+                            mr="2"
+                            flexShrink={0}
+                        >
+                            1
+                        </Box>
+                        <Text fontSize="lg" fontWeight="bold" textTransform="uppercase">Parameters</Text>
+                    </Flex>
+                    <Text fontSize="sm" color="gray.600" mb="5" ml="9">
                         Configure the build details by selecting an environment and the install locations.
-                    </p>
-                    <fieldset className="boxy">
-                        <legend>Environment</legend>
-                        <p className="helper info">
-                            The source environment where install is located.
-                        </p>
-                        <ul className="radio-group">
-                            <li>
-                                <input type="radio" name="build_env" id="build_env_devl" value="devl" 
-                                    onChange={handleEnvChange}
-                                    checked={env === "devl"}
-                                />
-                                <label htmlFor="build_env_devl" title="Development">Development</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="build_env" id="build_env_test" value="test"
-                                    onChange={handleEnvChange}
-                                    checked={env === "test"}
-                                />
-                                <label htmlFor="build_env_test" title="Test">Test</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="build_env" id="build_env_syst" value="syst"
-                                    onChange={handleEnvChange}
-                                    checked={env === "syst"}
-                                />
-                                <label htmlFor="build_env_syst" title="Systems">Systems</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="build_env" id="build_env_prod" value="prod"
-                                    onChange={handleEnvChange}
-                                    checked={env === "prod"}
-                                />
-                                <label htmlFor="build_env_prod" title="Production">Production</label>
-                            </li>
+                    </Text>
 
-                            <li>
-                                <input type="radio" name="build_env" id="build_env_cloud" value="cloud"
-                                    onChange={handleEnvChange}
-                                    checked={env === "cloud"}
-                                />
-                                <label htmlFor="build_env_cloud" title="Cloud">Cloud</label>
-                            </li>
-                        </ul>
-                    </fieldset>
-                    <fieldset className="boxy">
-                        <legend>Install</legend>
-                        <p className="helper info">
-                            The install which is being built.
-                        </p>
-                        <ul className="radio-group">
-                            <li>
-                                <input type="radio" name="build_inst" id="build_inst_blogs" value="blogs"
-                                    onChange={handleInstallChange}
-                                    checked={install === "blogs"}
-                                />
-                                <label htmlFor="build_inst_blogs">Blogs</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="build_inst" id="build_inst_cms" value="cms"
-                                    onChange={handleInstallChange}
-                                    checked={install === "cms"}
-                                />
-                                <label htmlFor="build_inst_cms">CMS</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="build_inst" id="build_inst_sandbox"
-                                    value="sandbox" className="show-options"
-                                    data-additional-container="build_sandbox"
-                                    onChange={handleInstallChange}
-                                    checked={install === "sandbox"}    
-                                />
-                                <label htmlFor="build_inst_sandbox">Sandbox</label>
-                            </li>
-                        </ul>
+                    {/* Environment */}
+                    <Box p="4" borderWidth="1px" borderBottomWidth="3px" borderColor="gray.300" bg="gray.100" rounded="sm" mb="4">
+                        <Text fontSize="sm" fontWeight="bold" color="gray.700" textTransform="uppercase" mb="3">Environment</Text>
+                        <Flex gap="4" align="flex-start">
+                            <Stack spacing="1" flex="1">
+                                {envOptions.map(({ value, label }) => (
+                                    <Flex key={value} align="center" gap="2">
+                                        <input
+                                            type="radio"
+                                            name="build_env"
+                                            id={`build_env_${value}`}
+                                            value={value}
+                                            onChange={handleEnvChange}
+                                            checked={env === value}
+                                        />
+                                        <label htmlFor={`build_env_${value}`}>{label}</label>
+                                    </Flex>
+                                ))}
+                            </Stack>
+                            <Box
+                                bg="yellow.50"
+                                color="yellow.800"
+                                borderWidth="1px"
+                                borderColor="yellow.200"
+                                borderLeftWidth="3px"
+                                borderLeftColor="yellow.400"
+                                rounded="sm"
+                                p="4"
+                                fontSize="sm"
+                                w="50%"
+                            >
+                                The source environment where install is located.
+                            </Box>
+                        </Flex>
+                    </Box>
 
-                        {(install === "sandbox" && env ) && 
-                            <div id="build_sandbox" className="sandbox-chooser additional-container">
-                                <label htmlFor="sandbox_id_select">Select sandbox:</label>
-                                <select type="text" name="sandbox_id_new" id="sandbox_id_new"
-                                    className="sandbox-select input-text"
-                                    onChange={handleSandboxChange}
-                                >
-                                    <option value="" disabled selected hidden>Select a sandbox</option>
-                                    { envInstalls[env].filter(sandbox => sandbox !== "cms" && sandbox !== "blogs").map((sandbox, index) => (
-                                        <option key={index} value={sandbox}>{sandbox}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        }
-                    </fieldset>
-                </fieldset>
+                    {/* Install */}
+                    <Box p="4" borderWidth="1px" borderBottomWidth="3px" borderColor="gray.300" bg="gray.100" rounded="sm" mb="4">
+                        <Text fontSize="sm" fontWeight="bold" color="gray.700" textTransform="uppercase" mb="3">Install</Text>
+                        <Flex gap="4" align="flex-start">
+                            <Stack spacing="1" flex="1">
+                                <Flex align="center" gap="2">
+                                    <input
+                                        type="radio"
+                                        name="build_inst"
+                                        id="build_inst_blogs"
+                                        value="blogs"
+                                        onChange={handleInstallChange}
+                                        checked={install === "blogs"}
+                                    />
+                                    <label htmlFor="build_inst_blogs">Blogs</label>
+                                </Flex>
+                                <Flex align="center" gap="2">
+                                    <input
+                                        type="radio"
+                                        name="build_inst"
+                                        id="build_inst_cms"
+                                        value="cms"
+                                        onChange={handleInstallChange}
+                                        checked={install === "cms"}
+                                    />
+                                    <label htmlFor="build_inst_cms">CMS</label>
+                                </Flex>
+                                <Flex align="center" gap="2">
+                                    <input
+                                        type="radio"
+                                        name="build_inst"
+                                        id="build_inst_sandbox"
+                                        value="sandbox"
+                                        onChange={handleInstallChange}
+                                        checked={install === "sandbox"}
+                                    />
+                                    <label htmlFor="build_inst_sandbox">Sandbox</label>
+                                </Flex>
+
+                                {(install === "sandbox" && env) &&
+                                    <Box mt="2">
+                                        <label htmlFor="sandbox_id_new">Select sandbox:</label>
+                                        <select
+                                            name="sandbox_id_new"
+                                            id="sandbox_id_new"
+                                            value={sandbox}
+                                            onChange={handleSandboxChange}
+                                            style={{ display: 'block', marginTop: '0.5em', fontSize: '1em' }}
+                                        >
+                                            <option value="" disabled hidden>Select a sandbox</option>
+                                            {envInstalls[env].filter(sb => sb !== "cms" && sb !== "blogs").map((sb, index) => (
+                                                <option key={index} value={sb}>{sb}</option>
+                                            ))}
+                                        </select>
+                                    </Box>
+                                }
+                            </Stack>
+                            <Box
+                                bg="yellow.50"
+                                color="yellow.800"
+                                borderWidth="1px"
+                                borderColor="yellow.200"
+                                borderLeftWidth="3px"
+                                borderLeftColor="yellow.400"
+                                rounded="sm"
+                                p="4"
+                                fontSize="sm"
+                                w="50%"
+                            >
+                                The install which is being built.
+                            </Box>
+                        </Flex>
+                    </Box>
+                </Box>
+
                 <ManifestList
                     workingManifest={workingManifest}
                     setWorkingManifest={setWorkingManifest}
@@ -283,12 +331,13 @@ export default function MainForm() {
                     prodManifest={prodManifest}
                     devlManifest={devlManifest}
                 />
-                <fieldset className="optional">
-                    <CommitMessage 
+
+                <Box>
+                    <CommitMessage
                         message={commitMessage}
                         handleMessageChange={handleMessageChange}
                     />
-                </fieldset>
+                </Box>
 
                 <ConfirmationModal
                     handleValidate={handleValidate}
@@ -301,6 +350,6 @@ export default function MainForm() {
                 />
 
             </form>
-        </div>
+        </Box>
     );
 }
