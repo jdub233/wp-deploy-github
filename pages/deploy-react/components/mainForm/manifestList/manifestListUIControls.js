@@ -1,4 +1,4 @@
-import { Box, VStack, Input, Button } from "@chakra-ui/react";
+import { VStack, Input, Button } from "@chakra-ui/react";
 
 export default function ManifestListUIControls({
     filterCriteria,
@@ -8,8 +8,7 @@ export default function ManifestListUIControls({
     setAllToProd,
 }) {
     return (
-        <Box style={{ float: 'right', width: '30%' }}>
-            <VStack align="stretch" maxWidth="260px" pl="6" pr="2.5" mt="12" gap="4">
+        <VStack align="stretch" flexShrink={0} maxWidth="260px" pl="6" pr="2.5" mt="12" gap="4">
                 <Input
                     type="search"
                     placeholder="Search..."
@@ -83,7 +82,6 @@ export default function ManifestListUIControls({
                 >
                     Replace all with Prod
                 </Button>
-            </VStack>
-        </Box>
+        </VStack>
     );
 }
