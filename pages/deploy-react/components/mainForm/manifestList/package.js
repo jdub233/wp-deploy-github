@@ -62,20 +62,26 @@ export default function Package({
 
     const toggleExpand = async () => {
         if (typeof window !== "undefined") {
-            setExpanded(!expanded);
-            if (!expanded && Object.keys(repoTags).length === 0 && manifestItem.scm === 'git') {
-                const fetchTags = async () => {
-                    try {
-                        const repo = manifestItem.source.replace('git@github.com:', '').replace('.git', '');
-                        const response = await fetch(`/api/fetchTags?repo=${repo}`);
-                        const data = await response.json();
-                        setRepoTags(data);
-                    } catch (error) {
-                        console.error('Failed to fetch tags:', error);
-                    }
-                };
-                fetchTags();
-            }
+            setExpanded(prevExpanded => {
+                const nextExpanded = !prevExpanded;
+                
+                // Fetch tags if we're expanding and haven't fetched yet
+                if (nextExpanded && Object.keys(repoTags).length === 0 && manifestItem.scm === 'git') {
+                    const fetchTags = async () => {
+                        try {
+                            const repo = manifestItem.source.replace('git@github.com:', '').replace('.git', '');
+                            const response = await fetch(`/api/fetchTags?repo=${repo}`);
+                            const data = await response.json();
+                            setRepoTags(data);
+                        } catch (error) {
+                            console.error('Failed to fetch tags:', error);
+                        }
+                    };
+                    fetchTags();
+                }
+                
+                return nextExpanded;
+            });
         }
     };
 
