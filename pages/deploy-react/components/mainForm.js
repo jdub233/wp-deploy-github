@@ -327,7 +327,6 @@ export default function MainForm() {
                 <ManifestList
                     workingManifest={workingManifest}
                     setWorkingManifest={setWorkingManifest}
-                    loadedManifest={loadedManifest}
                     prodManifest={prodManifest}
                     devlManifest={devlManifest}
                 />
