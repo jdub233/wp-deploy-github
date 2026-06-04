@@ -1,4 +1,3 @@
-import "@/styles/globals.css";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 
