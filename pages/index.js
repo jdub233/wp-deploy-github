@@ -36,7 +36,7 @@ export default function Home() {
                 <Text mb="6" color="gray.700">
                   WP Deploy works with Github to manage build manifests
                 </Text>
-                <Button colorScheme="blue" size="lg" onClick={() => signIn()}>
+                <Button colorPalette="blue" size="lg" onClick={() => signIn()}>
                   Sign in with GitHub
                 </Button>
               </Box>
@@ -57,7 +57,7 @@ export default function Home() {
                   <Button
                     size="sm"
                     variant="outline"
-                    colorScheme="gray"
+                    colorPalette="gray"
                     onClick={() => signOut()}
                   >
                     Sign out
