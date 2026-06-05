@@ -19,6 +19,7 @@ export default function MainForm() {
     // Validation
     const [validationResults, setValidationResults] = useState({});
     const [isCommitting, setIsCommitting] = useState(false);
+    const [isLoadingManifest, setIsLoadingManifest] = useState(false);
 
 
     // Manifest state
@@ -105,6 +106,7 @@ export default function MainForm() {
     };
 
     async function getNewWorkingManifest(env, install) {
+        setIsLoadingManifest(true);
         try {
             const response = await fetch(`/api/fetchIniFile?path=${env}/${install}.ini`);
             const data = await response.json();
@@ -116,6 +118,8 @@ export default function MainForm() {
 
         } catch (error) {
             console.error('Error fetching data:', error);
+        } finally {
+            setIsLoadingManifest(false);
         }
     }
 
@@ -183,7 +187,6 @@ export default function MainForm() {
         { value: "test", label: "Test" },
         { value: "syst", label: "Systems" },
         { value: "prod", label: "Production" },
-        { value: "cloud", label: "Cloud" },
     ];
 
     return (
@@ -217,7 +220,7 @@ export default function MainForm() {
                     <Box p="4" borderWidth="1px" borderBottomWidth="3px" borderColor="gray.300" bg="gray.100" rounded="sm" mb="4">
                         <Text fontSize="sm" fontWeight="bold" color="gray.700" textTransform="uppercase" mb="3">Environment</Text>
                         <Flex gap="4" align="flex-start">
-                            <Stack spacing="1" flex="1">
+                            <Stack flex="1">
                                 {envOptions.map(({ value, label }) => (
                                     <Flex key={value} align="center" gap="2">
                                         <input
@@ -329,6 +332,7 @@ export default function MainForm() {
                     setWorkingManifest={setWorkingManifest}
                     prodManifest={prodManifest}
                     devlManifest={devlManifest}
+                    isLoadingManifest={isLoadingManifest}
                 />
 
                 <Box>
