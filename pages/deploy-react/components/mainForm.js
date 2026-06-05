@@ -19,6 +19,7 @@ export default function MainForm() {
     // Validation
     const [validationResults, setValidationResults] = useState({});
     const [isCommitting, setIsCommitting] = useState(false);
+    const [isLoadingManifest, setIsLoadingManifest] = useState(false);
 
 
     // Manifest state
@@ -105,6 +106,7 @@ export default function MainForm() {
     };
 
     async function getNewWorkingManifest(env, install) {
+        setIsLoadingManifest(true);
         try {
             const response = await fetch(`/api/fetchIniFile?path=${env}/${install}.ini`);
             const data = await response.json();
@@ -116,6 +118,8 @@ export default function MainForm() {
 
         } catch (error) {
             console.error('Error fetching data:', error);
+        } finally {
+            setIsLoadingManifest(false);
         }
     }
 
@@ -329,6 +333,7 @@ export default function MainForm() {
                     setWorkingManifest={setWorkingManifest}
                     prodManifest={prodManifest}
                     devlManifest={devlManifest}
+                    isLoadingManifest={isLoadingManifest}
                 />
 
                 <Box>

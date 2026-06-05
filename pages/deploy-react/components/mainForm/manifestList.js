@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Flex, Text, Input, Button, HStack } from "@chakra-ui/react";
+import { Box, Flex, Text, Input, Button, HStack, Spinner, VStack } from "@chakra-ui/react";
 import { NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { toaster } from "../../../../components/ui/toaster";
 
@@ -11,6 +11,7 @@ export default function ManifestList({
     setWorkingManifest,
     prodManifest,
     devlManifest,
+    isLoadingManifest,
 }) {
 
     const [filterCriteria, setFilterCriteria] = useState(null);
@@ -126,11 +127,16 @@ export default function ManifestList({
                 borderRadius="sm"
                 borderBottomWidth="3px"
             >
-                {!manifestNotEmpty(workingManifest) && (
+                {isLoadingManifest ? (
+                    <VStack px="2" py="12" gap="4">
+                        <Spinner size="lg" color="blue.500" />
+                        <Text fontSize="lg" color="gray.600">Loading manifest...</Text>
+                    </VStack>
+                ) : !manifestNotEmpty(workingManifest) ? (
                     <Box px="2" py="6">
                         <Text fontSize="2xl" color="gray.300">Select an environment &amp; a build...</Text>
                     </Box>
-                )}
+                ) : null}
                 <Flex align="flex-start">
                     <Box flex="1" position="relative">
                         {manifestNotEmpty(workingManifest) && (
