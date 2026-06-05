@@ -133,7 +133,7 @@ const Package = memo(function Package({
                     />
                 </Box>
                 <Box flex="1">
-                    <Text fontSize="md" fontWeight="semibold" my="1" color={isOldVersion ? "red.600" : "inherit"}>
+                    <Text fontSize="md" fontWeight="semibold" my="1" fontFamily="heading" color={isOldVersion ? "red.600" : "inherit"}>
                         {manifestItem.id}
                     </Text>
                     <Text fontSize="xs" pb="2">
