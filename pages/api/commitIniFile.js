@@ -49,10 +49,16 @@ export default async function handler(req, res) {
             const commitResult = await commitToRepo(path, iniFile, message);
 
             // return the result of the commit operation.
-            const resultStatus = commitResult ? 200 : 500;
-            const resultMessage = commitResult ? "Success" : "Error committing file";
-
-            res.status(resultStatus).json({ message: resultMessage });
+            if (commitResult.success) {
+                res.status(200).json({ 
+                    message: "Success",
+                    sha: commitResult.sha
+                });
+            } else {
+                res.status(500).json({ 
+                    message: "Error committing file"
+                });
+            }
 
         } else {
             res.status(405).json({ message: "Method Not Allowed" });

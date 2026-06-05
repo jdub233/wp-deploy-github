@@ -20,6 +20,7 @@ export default function MainForm() {
     const [validationResults, setValidationResults] = useState({});
     const [isCommitting, setIsCommitting] = useState(false);
     const [isLoadingManifest, setIsLoadingManifest] = useState(false);
+    const [commitResult, setCommitResult] = useState(null);
 
 
     // Manifest state
@@ -147,6 +148,7 @@ export default function MainForm() {
 
     function cancelValidation() {
         setValidationResults({});
+        setCommitResult(null);
     }
 
     // Commit the working manifest to the appropriate ini file.
@@ -170,14 +172,28 @@ export default function MainForm() {
         // Display the response to the user.
         console.log('commitResponse:', commitResponse);
 
-        // Provide feedback and link to GitHub Actions
+        // Set commit result to show success/error in the modal
         if (commitResponse.status === 200) {
+            const responseData = await commitResponse.json();
             const actionsUrl = `https://github.com/${process.env.NEXT_PUBLIC_MANIFEST_REPO}/actions`;
-            alert(`Commit successful!\n\nView build status at:\n${actionsUrl}`);
-            // Reload page to clear state and show fresh data
-            window.location.reload();
+            setCommitResult({
+                status: 'success',
+                actionsUrl,
+                env,
+                install: install === 'sandbox' ? sandbox : install,
+                commitSha: responseData.sha,
+                commitMessage: commitMessage,
+                validationResults: validationResults
+            });
         } else {
-            alert('Error committing file. Please check the console for details.');
+            setCommitResult({
+                status: 'error',
+                message: 'Failed to commit changes. Please check the console for details.',
+                commitMessage: commitMessage,
+                validationResults: validationResults,
+                env,
+                install: install === 'sandbox' ? sandbox : install
+            });
         }
 
     }
@@ -350,6 +366,7 @@ export default function MainForm() {
                     install={install}
                     commitWorkingManifest={commitWorkingManifest}
                     isCommitting={isCommitting}
+                    commitResult={commitResult}
                 />
 
             </form>
