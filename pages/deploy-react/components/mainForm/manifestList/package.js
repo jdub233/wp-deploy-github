@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import Image from 'next/image';
 import { Box, Flex, Input, Popover, Portal, Stack, Button, Text } from "@chakra-ui/react";
 
-export default function Package({
+const Package = memo(function Package({
     manifestItem,
     setWorkingManifest,
     prodManifest,
@@ -348,4 +348,6 @@ export default function Package({
             )}
         </Box>
     );
-}
+});
+
+export default Package;
