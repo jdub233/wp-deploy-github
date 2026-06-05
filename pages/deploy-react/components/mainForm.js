@@ -187,7 +187,6 @@ export default function MainForm() {
         { value: "test", label: "Test" },
         { value: "syst", label: "Systems" },
         { value: "prod", label: "Production" },
-        { value: "cloud", label: "Cloud" },
     ];
 
     return (
