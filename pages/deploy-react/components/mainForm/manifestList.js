@@ -73,7 +73,9 @@ export default function ManifestList({
         const newPackage = {
             id: newPackageId.trim(),
             scm: newPackageScm,
-            source: newPackageScm === 'git' ? 'git@github.com:bu-ist/' : 'https://scm.ist.bu.edu/svn/',
+            source: newPackageScm === 'git' 
+                ? `git@github.com:bu-ist/${newPackageId.trim()}.git`
+                : `https://plugins.svn.wordpress.org/${newPackageId.trim()}/trunk/`,
             refspec: newPackageScm === 'git' ? 'main' : '',
             rev: newPackageScm === 'git' ? '' : 'HEAD',
             dest: `wp-content/plugins/${newPackageId.trim()}`,
