@@ -217,7 +217,7 @@ export default function MainForm() {
                     <Box p="4" borderWidth="1px" borderBottomWidth="3px" borderColor="gray.300" bg="gray.100" rounded="sm" mb="4">
                         <Text fontSize="sm" fontWeight="bold" color="gray.700" textTransform="uppercase" mb="3">Environment</Text>
                         <Flex gap="4" align="flex-start">
-                            <Stack spacing="1" flex="1">
+                            <Stack flex="1">
                                 {envOptions.map(({ value, label }) => (
                                     <Flex key={value} align="center" gap="2">
                                         <input

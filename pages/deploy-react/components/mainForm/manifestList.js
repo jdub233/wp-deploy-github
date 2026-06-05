@@ -147,7 +147,7 @@ export default function ManifestList({
                                 />
                             ))}
                         </Box>
-                        <HStack mt="4" gap="2">
+                        <HStack mt="10" mb="6" gap="2">
                             <Input
                                 size="sm"
                                 placeholder="Package ID"
