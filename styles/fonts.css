@@ -1,0 +1,41 @@
+/* Stag font family — loaded from BU CDN, applied via Chakra theme heading token */
+
+@font-face {
+  font-family: "Stag";
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Light/4c685d8e-b622-4304-b8f3-c0c6e81d4750-2.eot");
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Light/4c685d8e-b622-4304-b8f3-c0c6e81d4750-2.eot?") format("embedded-opentype"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Light/4c685d8e-b622-4304-b8f3-c0c6e81d4750-3.woff") format("woff"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Light/4c685d8e-b622-4304-b8f3-c0c6e81d4750-1.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Stag";
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Light-Italic/ddd2bc1c-93d4-40cb-b47d-afad034fb12b-2.eot");
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Light-Italic/ddd2bc1c-93d4-40cb-b47d-afad034fb12b-2.eot?") format("embedded-opentype"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Light-Italic/ddd2bc1c-93d4-40cb-b47d-afad034fb12b-3.woff") format("woff"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Light-Italic/ddd2bc1c-93d4-40cb-b47d-afad034fb12b-1.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Stag";
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold/28c2c0ff-576b-4d17-9282-83281eeb1cb9-2.eot");
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold/28c2c0ff-576b-4d17-9282-83281eeb1cb9-2.eot?") format("embedded-opentype"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold/28c2c0ff-576b-4d17-9282-83281eeb1cb9-3.woff") format("woff"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold/28c2c0ff-576b-4d17-9282-83281eeb1cb9-1.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Stag";
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold-Italic/e11d588e-b323-4303-b7dd-8f4c1b6609e9-2.eot");
+  src: url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold-Italic/e11d588e-b323-4303-b7dd-8f4c1b6609e9-2.eot?") format("embedded-opentype"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold-Italic/e11d588e-b323-4303-b7dd-8f4c1b6609e9-3.woff") format("woff"),
+       url("https://www.bu.edu/cdn/fonts/Stag-Web-Semibold-Italic/e11d588e-b323-4303-b7dd-8f4c1b6609e9-1.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 700;
+}

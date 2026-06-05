@@ -1,25 +1,87 @@
-export default function ManifestListUIControls( {
+import { VStack, Input, Button } from "@chakra-ui/react";
+
+export default function ManifestListUIControls({
     filterCriteria,
     setFilterCriteria,
     searchTerm,
     setSearchTerm,
     setAllToProd,
-} ) {
+}) {
     return (
-        <div className="manifest-list-ui-controls">
-            <div className="list-ui-controls-inner">
-                <input
+        <VStack align="stretch" flexShrink={0} maxWidth="260px" pl="6" pr="2.5" mt="12" gap="4">
+                <Input
                     type="search"
-                    className="manifest-list-search"
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
+                    bg="white"
+                    borderRadius="sm"
+                    mb="5"
                 />
-                <button type="button" onClick={() => setFilterCriteria(null)} className={`manifest-list-filter show-all${!filterCriteria ? ' filter-active' : ''}`}>Show All</button>
-                <button type="button" onClick={() => setFilterCriteria('outdatedProd')} className={`manifest-list-filter${filterCriteria == 'outdatedProd' ? ' filter-active' : ''}`}>Show outdated only</button>
-                <button type="button" className="manifest-list-filter">Show	mismatched SCM</button>
-                <button type="button" onClick={() => setAllToProd()} className="manifest-list-action manifest-list-add-from-prod">Replace all with Prod</button>
-            </div>
-        </div>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setFilterCriteria(null)}
+                    width="full"
+                    justifyContent="flex-start"
+                    fontSize="sm"
+                    borderRadius="sm"
+                    py="6"
+                    bg={!filterCriteria ? "cyan.50" : "white"}
+                    borderLeftWidth="6px"
+                    borderLeftColor={!filterCriteria ? "cyan.700" : "transparent"}
+                    _hover={{ borderLeftColor: "cyan.700", bg: "cyan.50" }}
+                >
+                    Show All
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setFilterCriteria('outdatedProd')}
+                    width="full"
+                    justifyContent="flex-start"
+                    fontSize="sm"
+                    borderRadius="sm"
+                    py="6"
+                    bg={filterCriteria === 'outdatedProd' ? "cyan.50" : "white"}
+                    borderLeftWidth="6px"
+                    borderLeftColor={filterCriteria === 'outdatedProd' ? "cyan.700" : "transparent"}
+                    _hover={{ borderLeftColor: "cyan.700", bg: "cyan.50" }}
+                >
+                    Show outdated only
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    width="full"
+                    justifyContent="flex-start"
+                    fontSize="sm"
+                    borderRadius="sm"
+                    py="6"
+                    bg="white"
+                    borderLeftWidth="6px"
+                    borderLeftColor="transparent"
+                    _hover={{ borderLeftColor: "cyan.700", bg: "cyan.50" }}
+                >
+                    Show mismatched SCM
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setAllToProd()}
+                    width="full"
+                    justifyContent="flex-start"
+                    fontSize="sm"
+                    borderRadius="sm"
+                    py="6"
+                    mt="10"
+                    bg="white"
+                    border="1px solid"
+                    borderColor="red.700"
+                    _hover={{ bg: "red.50" }}
+                >
+                    Replace all with Prod
+                </Button>
+        </VStack>
     );
 }
