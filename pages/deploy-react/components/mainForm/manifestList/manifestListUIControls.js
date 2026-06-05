@@ -53,21 +53,6 @@ export default function ManifestListUIControls({
                 <Button
                     type="button"
                     variant="ghost"
-                    width="full"
-                    justifyContent="flex-start"
-                    fontSize="sm"
-                    borderRadius="sm"
-                    py="6"
-                    bg="white"
-                    borderLeftWidth="6px"
-                    borderLeftColor="transparent"
-                    _hover={{ borderLeftColor: "cyan.700", bg: "cyan.50" }}
-                >
-                    Show mismatched SCM
-                </Button>
-                <Button
-                    type="button"
-                    variant="ghost"
                     onClick={() => setAllToProd()}
                     width="full"
                     justifyContent="flex-start"
