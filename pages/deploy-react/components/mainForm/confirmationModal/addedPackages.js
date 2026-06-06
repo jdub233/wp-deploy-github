@@ -7,8 +7,8 @@ export default function AddedPackages({ addedPackages }) {
         <Box mb="4">
             <Text fontSize="lg" fontWeight="bold" mb="2">Added Packages</Text>
             <Box as="ul" listStyleType="none" m="0" p="0">
-                {addedPackages.map((pkg, index) => (
-                    <AddedPackage key={index} pkg={pkg} />
+                {addedPackages.map((pkg) => (
+                    <AddedPackage key={pkg.id} pkg={pkg} />
                 ))}
             </Box>
         </Box>

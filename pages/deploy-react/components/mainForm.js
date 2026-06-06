@@ -318,8 +318,8 @@ export default function MainForm() {
                                             style={{ display: 'block', marginTop: '0.5em', fontSize: '1em' }}
                                         >
                                             <option value="" disabled hidden>Select a sandbox</option>
-                                            {envInstalls[env].filter(sb => sb !== "cms" && sb !== "blogs").map((sb, index) => (
-                                                <option key={index} value={sb}>{sb}</option>
+                                            {envInstalls[env].filter(sb => sb !== "cms" && sb !== "blogs").map((sb) => (
+                                                <option key={sb} value={sb}>{sb}</option>
                                             ))}
                                         </select>
                                     </Box>
