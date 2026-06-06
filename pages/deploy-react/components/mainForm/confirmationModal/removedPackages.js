@@ -7,8 +7,8 @@ export default function RemovedPackages({ removedPackages }) {
         <Box mb="4">
             <Text fontSize="lg" fontWeight="bold" mb="2">Removed Packages</Text>
             <Box as="ul" listStyleType="none" m="0" p="0">
-                {removedPackages.map((pkg, index) => (
-                    <RemovedPackage key={index} pkg={pkg} />
+                {removedPackages.map((pkg) => (
+                    <RemovedPackage key={pkg} pkg={pkg} />
                 ))}
             </Box>
         </Box>

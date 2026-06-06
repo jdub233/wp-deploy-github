@@ -145,9 +145,9 @@ export default function ManifestList({
                             <Text fontSize="xl" fontWeight="semibold" mb="5" mx="1" fontFamily="heading">Working manifest</Text>
                         )}
                         <Box maxHeight="600px" overflowY="auto">
-                            {manifestNotEmpty(workingManifest) && filteredWorkingManifest.map((manifestItem, index) => (
+                            {manifestNotEmpty(workingManifest) && filteredWorkingManifest.map((manifestItem) => (
                                 <Package
-                                    key={index}
+                                    key={manifestItem.id}
                                     manifestItem={manifestItem}
                                     setWorkingManifest={setWorkingManifest}
                                     prodManifest={prodManifest}
