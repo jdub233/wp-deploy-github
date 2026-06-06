@@ -216,23 +216,20 @@ export default function ConfirmationModal({ handleValidate, cancelValidation, va
                                             <Text fontSize="sm" color="blue.800" mb="3">
                                                 The build pipeline will create a container image and deploy it to the cluster.
                                             </Text>
-                                            <a
+                                            <Button
+                                                as="a"
                                                 href={commitResult.actionsUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                style={{ textDecoration: 'none', display: 'block' }}
+                                                colorPalette="blue"
+                                                size="sm"
+                                                w="full"
                                             >
-                                                <Button
-                                                    colorPalette="blue"
-                                                    size="sm"
-                                                    w="full"
-                                                >
-                                                    <Flex align="center" gap="2">
-                                                        <Text>View GitHub Actions</Text>
-                                                        <HiExternalLink />
-                                                    </Flex>
-                                                </Button>
-                                            </a>
+                                                <Flex align="center" gap="2">
+                                                    <Text>View GitHub Actions</Text>
+                                                    <HiExternalLink />
+                                                </Flex>
+                                            </Button>
                                         </Box>
                                     </VStack>
                                 </Dialog.Body>
