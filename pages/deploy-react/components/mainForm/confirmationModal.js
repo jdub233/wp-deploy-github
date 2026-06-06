@@ -29,9 +29,27 @@ export default function ConfirmationModal({ handleValidate, cancelValidation, va
             (validationResults.added_packages?.length ?? 0);
         
         // For single-package deploys, get the specific package that changed
-        const singlePackageChange = numChangedPackages === 1 
-            ? (validationResults.changed_packages?.[0] || validationResults.added_packages?.[0] || validationResults.removed_packages?.[0])
-            : null;
+        let singlePackageChange = null;
+        if (numChangedPackages === 1) {
+            if (validationResults.changed_packages?.length === 1) {
+                const pkg = validationResults.changed_packages[0];
+                singlePackageChange = {
+                    id: pkg.id,
+                    old_refspec: pkg.old_attributes.refspec,
+                    new_refspec: pkg.changed_attributes.refspec
+                };
+            } else if (validationResults.added_packages?.length === 1) {
+                const pkg = validationResults.added_packages[0];
+                singlePackageChange = {
+                    id: pkg.id,
+                    refspec: pkg.changed_attributes.refspec
+                };
+            } else if (validationResults.removed_packages?.length === 1) {
+                singlePackageChange = {
+                    id: validationResults.removed_packages[0] // removed_packages is an array of strings
+                };
+            }
+        }
 
         return (
             <Box>
