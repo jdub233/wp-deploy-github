@@ -189,8 +189,8 @@ export default function ConfirmationModal({ handleValidate, cancelValidation, va
                                                         display: 'block',
                                                         wordBreak: 'break-all'
                                                     }}
-                                                    onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                                                    onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+                                                    onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                                                    onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
                                                 >
                                                     {commitSha}
                                                 </a>
