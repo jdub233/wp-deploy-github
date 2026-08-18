@@ -1,0 +1,21 @@
+# Local env files must never reach the image build.
+# Next.js loads .env.local in every environment except test, and it takes precedence
+# over .env.production -- so a copied .env.local silently overrides production values
+# (NEXT_PUBLIC_* are inlined at build time, so this is invisible until runtime).
+.env*.local
+
+# Regenerated inside the build; copying them wastes context and can carry
+# host-architecture native modules into a linux image.
+node_modules
+.next
+.aws-sam
+
+# Not needed to build. Keeping infra files out also means an infrastructure-only
+# change (template/samconfig) does not invalidate the image layers and force a rebuild.
+.git
+.vscode
+agent_screenshots
+staging
+*.md
+template.yaml
+samconfig.toml
