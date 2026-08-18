@@ -41,3 +41,6 @@ next-env.d.ts
 
 # AWS SAM
 .aws-sam/
+
+# Ignore files that aren't ready to be committed yet in the staging directory
+/staging/

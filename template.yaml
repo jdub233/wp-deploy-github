@@ -4,10 +4,38 @@ Description: >
   serverless-nextjs
 
   SAM Template for serverless-nextjs with web adapter.
-  
+
+# Stage-specific values live in samconfig.toml under each config-env's
+# parameter_overrides, so this template stays free of environment detail.
+Parameters:
+  DomainName:
+    Type: String
+    Default: ""
+    Description: >
+      Custom domain for this stage, e.g. mydeploy.subsite.example.edu. Leave empty to
+      deploy with only the generated API Gateway URL.
+  HostedZoneId:
+    Type: String
+    Default: ""
+    Description: Route53 hosted zone owning DomainName. Required when DomainName is set.
+  CertificateArn:
+    Type: String
+    Default: ""
+    Description: >
+      ACM certificate for DomainName. Must be in the SAME region as this stack --
+      a regional HTTP API custom domain will not accept a us-east-1 certificate.
+
+Conditions:
+  # An empty DomainName means "no custom domain", so a stage can deploy without one.
+  HasCustomDomain: !Not [!Equals [!Ref DomainName, ""]]
+
 Globals:
   Function:
-    Timeout: 10
+    # Lambda caps the INIT phase at 10s and then retries initialization inside the
+    # invocation. Next.js cold starts here measure 2.4-10s, so a 10s timeout leaves the
+    # retried init no room and surfaces as an intermittent 500 on first load.
+    # 30s is the API Gateway HTTP API maximum.
+    Timeout: 30
 
 Resources:
   NextjsFunction:
@@ -17,7 +45,7 @@ Resources:
       MemorySize: 512
       PackageType: Image
       Architectures:
-        - x86_64
+        - arm64
       Events:
         RootEvent:
           Type: HttpApi
@@ -33,8 +61,44 @@ Resources:
       DockerTag: v1
       DockerContext: ./
       Dockerfile: Dockerfile
-      
+
+  # The custom domain attaches to the API SAM generates implicitly.
+  ApiDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Condition: HasCustomDomain
+    Properties:
+      DomainName: !Ref DomainName
+      DomainNameConfigurations:
+        - CertificateArn: !Ref CertificateArn
+          EndpointType: REGIONAL
+          SecurityPolicy: TLS_1_2
+
+  ApiMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Condition: HasCustomDomain
+    Properties:
+      DomainName: !Ref ApiDomain
+      ApiId: !Ref ServerlessHttpApi
+      Stage: $default
+
+  # An explicit record wins over a zone wildcard for this exact name.
+  ApiDnsRecord:
+    Type: AWS::Route53::RecordSet
+    Condition: HasCustomDomain
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt ApiDomain.RegionalDomainName
+        HostedZoneId: !GetAtt ApiDomain.RegionalHostedZoneId
+
 Outputs:
   NextjsFunctionURL:
     Description: "API Gateway endpoint URL for Next.js"
     Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"
+
+  CustomDomainURL:
+    Condition: HasCustomDomain
+    Description: "Custom domain URL for Next.js"
+    Value: !Sub "https://${DomainName}/"
