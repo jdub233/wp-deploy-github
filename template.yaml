@@ -45,7 +45,7 @@ Resources:
       MemorySize: 512
       PackageType: Image
       Architectures:
-        - x86_64
+        - arm64
       Events:
         RootEvent:
           Type: HttpApi
