@@ -20,7 +20,7 @@ export default function Home() {
       </Head>
       <Header />
       <Box as="main" role="main" flex="1" py="12">
-        <Container maxWidth="container.xl" px="8">
+        <Container maxW="7xl" px="8">
           <Box mb="8">
             <Flex align="center" gap="3" mb="6">
               <Box as={ImHammer} fontSize="3xl" color="orange.500" />

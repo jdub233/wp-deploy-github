@@ -1,9 +1,10 @@
 import { useEffect, useState, memo } from 'react';
 import Image from 'next/image';
-import { Box, Flex, Input, Popover, Portal, Stack, Button, Text, IconButton } from "@chakra-ui/react";
+import { Badge, Box, Flex, Input, Popover, Portal, Spacer, Stack, Button, Text, IconButton } from "@chakra-ui/react";
 
 const Package = memo(function Package({
     manifestItem,
+    kind,
     setWorkingManifest,
     prodManifest,
     devlManifest,
@@ -112,43 +113,77 @@ const Package = memo(function Package({
 
     return (
         <Box
-            mb="2.5"
+            mb="1.5"
             border="1px solid"
             borderColor="gray.300"
             borderRadius="sm"
-            p="2"
+            px="2"
+            py="1"
             mr="4"
             bg="white"
-            minWidth="450px"
             position="relative"
         >
-            {/* Summary row */}
-            <Flex align="center">
-                <Box mr="2" flexShrink={0}>
+            {/* Collapsed summary row. The name is the only element allowed to shrink, so it
+                needs minW=0 alongside minW=0 on this Flex and overflowX=hidden on the scroll
+                container in manifestList.js -- all three, or the row clips at the panel edge. */}
+            <Flex align="center" gap="2" minW="0">
+                <IconButton
+                    type="button"
+                    aria-label={expanded ? `Collapse ${manifestItem.id}` : `Expand ${manifestItem.id}`}
+                    aria-expanded={expanded}
+                    onClick={toggleExpand}
+                    size="xs"
+                    variant="ghost"
+                    flexShrink={0}
+                >
+                    <Text as="span" fontSize="2xs">{expanded ? <>&#x25BC;</> : <>&#x25B6;</>}</Text>
+                </IconButton>
+                <Box flexShrink={0} lineHeight="0">
                     <Image
                         src={manifestItem.scm === 'git' ? '/git.png' : '/svn.png'}
                         alt={manifestItem.scm === 'git' ? 'Git' : 'SVN'}
-                        width={40}
-                        height={40}
+                        width={18}
+                        height={18}
                     />
                 </Box>
-                <Box flex="1">
-                    <Text fontSize="md" fontWeight="semibold" my="1" fontFamily="heading" color={isOldVersion ? "red.600" : "inherit"}>
-                        {manifestItem.id}
-                    </Text>
-                    <Text fontSize="xs" pb="2">
-                        {manifestItem.rev.substr(0, 6)}
-                        {referenceProdPackage?.rev && referenceProdPackage.rev !== manifestItem.rev &&
-                            ` (Prod: ${referenceProdPackage.rev.substr(0, 6)} )`
-                        }
-                    </Text>
-                </Box>
-                <Box px="3" pt="4" cursor="pointer" onClick={toggleExpand} flexShrink={0}>
-                    {!expanded ? <span>&#x25C0;</span> : <span>&#x25BC;</span>}
-                </Box>
-                <Box px="3" py="1" fontSize="xl" cursor="pointer" onClick={toggleStar} flexShrink={0}>
-                    {!starred ? <span>&#9734;</span> : <span>&#9733;</span>}
-                </Box>
+                <IconButton
+                    type="button"
+                    aria-label={starred ? `Unstar ${manifestItem.id}` : `Star ${manifestItem.id}`}
+                    aria-pressed={starred}
+                    onClick={toggleStar}
+                    size="xs"
+                    variant="ghost"
+                    flexShrink={0}
+                >
+                    <Text as="span" fontSize="md">{starred ? <>&#9733;</> : <>&#9734;</>}</Text>
+                </IconButton>
+                <Text
+                    minW="0"
+                    flex="0 1 auto"
+                    truncate
+                    fontSize="sm"
+                    fontWeight="semibold"
+                    fontFamily="heading"
+                    color={isOldVersion ? "red.600" : "inherit"}
+                >
+                    {manifestItem.id}
+                </Text>
+                {kind && (
+                    <Badge size="sm" variant="subtle" flexShrink={0}>{kind}</Badge>
+                )}
+                <Spacer />
+                {manifestItem.refspec && (
+                    <Badge size="sm" variant="outline" flexShrink={0} maxWidth="32" truncate>
+                        {manifestItem.refspec}
+                    </Badge>
+                )}
+                <Text fontSize="xs" fontFamily="mono" color="gray.600" flexShrink={0} whiteSpace="nowrap">
+                    {manifestItem.rev.substr(0, 7)}
+                    {/* Non-colour cue for "differs from prod", so red text is not the only signal. */}
+                    {referenceProdPackage?.rev && referenceProdPackage.rev !== manifestItem.rev && (
+                        <Text as="span" color="red.600"> &ne; {referenceProdPackage.rev.substr(0, 7)}</Text>
+                    )}
+                </Text>
             </Flex>
 
             {/* Expanded form */}
@@ -308,9 +343,26 @@ const Package = memo(function Package({
                             value={manifestItem.rev}
                         />
                         {isOldVersion && (
-                            <Text as="span" color="blue.600" cursor="pointer" ml="2" fontSize="sm" whiteSpace="nowrap" onClick={setPackageToProd}>
-                                {referenceProdPackage ? 'set to prod' : 'not a prod package'}
-                            </Text>
+                            referenceProdPackage ? (
+                                <Button
+                                    type="button"
+                                    variant="plain"
+                                    size="sm"
+                                    color="blue.600"
+                                    ml="2"
+                                    px="1"
+                                    height="auto"
+                                    fontWeight="normal"
+                                    whiteSpace="nowrap"
+                                    onClick={setPackageToProd}
+                                >
+                                    set to prod
+                                </Button>
+                            ) : (
+                                <Text as="span" ml="2" fontSize="sm" color="gray.600" whiteSpace="nowrap">
+                                    not in prod cms
+                                </Text>
+                            )
                         )}
                     </Flex>
 
@@ -332,17 +384,21 @@ const Package = memo(function Package({
                         />
                     </Flex>
 
-                    <Text
-                        position="absolute"
-                        bottom="2.5"
-                        right="2.5"
-                        fontSize="xs"
-                        color="red.600"
-                        cursor="pointer"
+                    <Button
+                        type="button"
                         onClick={removePackage}
+                        aria-label={`Remove ${manifestItem.id} from the manifest`}
+                        position="absolute"
+                        bottom="2"
+                        right="2.5"
+                        size="xs"
+                        variant="ghost"
+                        colorPalette="red"
+                        fontSize="xs"
+                        fontWeight="normal"
                     >
                         remove package
-                    </Text>
+                    </Button>
                 </Box>
             )}
         </Box>
