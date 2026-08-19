@@ -18,7 +18,7 @@ export default function Deploy() {
         <>
             <Header />
             <Box bg="gray.50">
-                <Container maxWidth="container.xl" px="8" py="6">
+                <Container maxW="7xl" px="8" py="6">
                     <Text as="h1" fontSize="3xl" fontWeight="bold" mb="6" display="flex" alignItems="center" gap="3">
                         <Box as={ImHammer} display="inline-block" boxSize="0.85em" /> Deploy
                     </Text>

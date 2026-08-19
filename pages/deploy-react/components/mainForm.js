@@ -272,7 +272,7 @@ export default function MainForm() {
                     <Box p="4" borderWidth="1px" borderBottomWidth="3px" borderColor="gray.300" bg="gray.100" rounded="sm" mb="4">
                         <Text fontSize="sm" fontWeight="bold" color="gray.700" textTransform="uppercase" mb="3">Install</Text>
                         <Flex gap="4" align="flex-start">
-                            <Stack spacing="1" flex="1">
+                            <Stack gap="1" flex="1">
                                 <Flex align="center" gap="2">
                                     <input
                                         type="radio"
@@ -304,12 +304,14 @@ export default function MainForm() {
                                         onChange={handleInstallChange}
                                         checked={install === "sandbox"}
                                     />
-                                    <label htmlFor="build_inst_sandbox">Sandbox</label>
+                                    {/* Label only -- the radio value stays "sandbox", which is
+                                        load-bearing throughout this component and the commit path. */}
+                                    <label htmlFor="build_inst_sandbox">Named build</label>
                                 </Flex>
 
                                 {(install === "sandbox" && env) &&
                                     <Box mt="2">
-                                        <label htmlFor="sandbox_id_new">Select sandbox:</label>
+                                        <label htmlFor="sandbox_id_new">Select build:</label>
                                         <select
                                             name="sandbox_id_new"
                                             id="sandbox_id_new"
@@ -317,7 +319,7 @@ export default function MainForm() {
                                             onChange={handleSandboxChange}
                                             style={{ display: 'block', marginTop: '0.5em', fontSize: '1em' }}
                                         >
-                                            <option value="" disabled hidden>Select a sandbox</option>
+                                            <option value="" disabled hidden>Select a build</option>
                                             {envInstalls[env].filter(sb => sb !== "cms" && sb !== "blogs").map((sb) => (
                                                 <option key={sb} value={sb}>{sb}</option>
                                             ))}
@@ -358,12 +360,14 @@ export default function MainForm() {
                     />
                 </Box>
 
+                {/* install resolves to the build's actual name rather than the raw radio
+                    value, matching what commitResult already reports in the success dialog. */}
                 <ConfirmationModal
                     handleValidate={handleValidate}
                     cancelValidation={cancelValidation}
                     validationResults={validationResults}
                     env={env}
-                    install={install}
+                    install={install === 'sandbox' ? sandbox : install}
                     commitWorkingManifest={commitWorkingManifest}
                     isCommitting={isCommitting}
                     commitResult={commitResult}

@@ -1,22 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, Flex, Text, Input, Button, HStack, Spinner, VStack } from "@chakra-ui/react";
 import { NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { toaster } from "../../../../components/ui/toaster";
+import { kindOf, matchesStatus, KIND_ORDER } from "../../../../lib/packageKind";
 
 import Package from "./manifestList/package";
 import ManifestListUIControls from "./manifestList/manifestListUIControls";
 
+// Note: this file lives under pages/, so Next's Pages Router also treats it as a route and
+// prerenders it with no props. The array defaults keep that prerender from throwing now that
+// filtering is derived during render rather than in an effect.
 export default function ManifestList({
-    workingManifest,
+    workingManifest = [],
     setWorkingManifest,
-    prodManifest,
+    prodManifest = [],
     devlManifest,
     isLoadingManifest,
 }) {
 
-    const [filterCriteria, setFilterCriteria] = useState(null);
+    const [typeFilter, setTypeFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('any');
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredWorkingManifest, setFilteredWorkingManifest] = useState(workingManifest);
     const [newPackageId, setNewPackageId] = useState('');
     const [newPackageScm, setNewPackageScm] = useState('');
 
@@ -26,27 +30,50 @@ export default function ManifestList({
         }
     }
 
-    useEffect(() => {
-        function applyFilter(manifest) {
-            if (!filterCriteria && searchTerm == '') return manifest;
+    // Look up prod packages by id once, rather than scanning prodManifest per package.
+    const prodById = useMemo(() => {
+        const byId = new Map();
+        prodManifest.forEach(prodPackage => byId.set(prodPackage.id, prodPackage));
+        return byId;
+    }, [prodManifest]);
 
-            if (searchTerm !== '') {
-                const matchingItems = manifest.filter(item => {
-                    return item.id.toLowerCase().includes(searchTerm.toLowerCase());
-                });
-                return matchingItems;
-            }
+    // Keyed lookup rather than decorating the manifest items themselves: decorating
+    // would give every item a new object identity on each manifest change, which would
+    // defeat the memo on Package and re-render the whole list on every keystroke.
+    const kindById = useMemo(() => {
+        const byId = new Map();
+        workingManifest.forEach(item => byId.set(item.id, kindOf(item.dest)));
+        return byId;
+    }, [workingManifest]);
 
-            if (filterCriteria === 'outdatedProd') {
-                return manifest.filter(item => {
-                    const prodItem = prodManifest.find(prod => prod.id === item.id);
-                    return prodItem && item.rev !== prodItem.rev;
-                });
-            }
-        }
-        
-        setFilteredWorkingManifest(applyFilter(workingManifest));
-    }, [workingManifest, filterCriteria, searchTerm, prodManifest]);
+    // Counts are computed before the search term is applied, so they stay stable while typing.
+    const counts = useMemo(() => {
+        const type = { all: workingManifest.length };
+        KIND_ORDER.forEach(kind => { type[kind] = 0; });
+
+        const status = { any: workingManifest.length, outdated: 0, notInProd: 0 };
+
+        workingManifest.forEach(item => {
+            const kind = kindById.get(item.id);
+            type[kind] = (type[kind] || 0) + 1;
+
+            const prodPackage = prodById.get(item.id);
+            if (matchesStatus('outdated', item, prodPackage)) status.outdated += 1;
+            if (matchesStatus('notInProd', item, prodPackage)) status.notInProd += 1;
+        });
+
+        return { type, status };
+    }, [workingManifest, kindById, prodById]);
+
+    // Type, status, and search compose. Note the behaviour change from the previous
+    // implementation: search used to replace the active filter, and now narrows within it.
+    const visibleManifest = useMemo(() => {
+        const search = searchTerm.trim().toLowerCase();
+        return workingManifest
+            .filter(item => typeFilter === 'all' || kindById.get(item.id) === typeFilter)
+            .filter(item => matchesStatus(statusFilter, item, prodById.get(item.id)))
+            .filter(item => !search || item.id.toLowerCase().includes(search));
+    }, [workingManifest, typeFilter, statusFilter, searchTerm, kindById, prodById]);
 
     function setAllToProd() {
         setWorkingManifest(prodManifest);
@@ -140,20 +167,48 @@ export default function ManifestList({
                     </Box>
                 ) : null}
                 <Flex align="flex-start">
-                    <Box flex="1" position="relative">
+                    {/* The facet rail leads the list: it scopes what follows, and putting it
+                        first also makes DOM/tab order match reading order. */}
+                    {manifestNotEmpty(workingManifest) && (
+                        <ManifestListUIControls
+                            typeFilter={typeFilter}
+                            setTypeFilter={setTypeFilter}
+                            statusFilter={statusFilter}
+                            setStatusFilter={setStatusFilter}
+                            counts={counts}
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            setAllToProd={setAllToProd}
+                        />
+                    )}
+                    <Box flex="1" minWidth="0" position="relative">
                         {manifestNotEmpty(workingManifest) && (
-                            <Text fontSize="xl" fontWeight="semibold" mb="5" mx="1" fontFamily="heading">Working manifest</Text>
+                            <Flex align="baseline" justify="space-between" mb="5" mx="1" gap="4">
+                                <Text fontSize="xl" fontWeight="semibold" fontFamily="heading">Working manifest</Text>
+                                <Text fontSize="xs" color="gray.600">
+                                    Showing {visibleManifest.length} of {workingManifest.length}. Filters affect
+                                    this view only &mdash; validation always compares the whole manifest.
+                                </Text>
+                            </Flex>
                         )}
-                        <Box maxHeight="600px" overflowY="auto">
-                            {manifestNotEmpty(workingManifest) && filteredWorkingManifest.map((manifestItem) => (
+                        <Box maxHeight="600px" overflowY="auto" overflowX="hidden">
+                            {manifestNotEmpty(workingManifest) && visibleManifest.map((manifestItem) => (
                                 <Package
                                     key={manifestItem.id}
                                     manifestItem={manifestItem}
+                                    kind={kindById.get(manifestItem.id)}
                                     setWorkingManifest={setWorkingManifest}
                                     prodManifest={prodManifest}
                                     devlManifest={devlManifest}
                                 />
                             ))}
+                            {manifestNotEmpty(workingManifest) && visibleManifest.length === 0 && (
+                                <Box px="2" py="8">
+                                    <Text fontSize="sm" color="gray.600">
+                                        No packages match the current filters.
+                                    </Text>
+                                </Box>
+                            )}
                         </Box>
                         <HStack mt="10" mb="6" gap="2">
                             <Input
@@ -174,8 +229,9 @@ export default function ManifestList({
                                 </NativeSelectField>
                             </NativeSelectRoot>
                             <Button
+                                type="button"
                                 size="sm"
-                                colorScheme="blue"
+                                colorPalette="blue"
                                 onClick={addNewPackage}
                                 disabled={!newPackageId.trim() || !newPackageScm}
                             >
@@ -183,15 +239,6 @@ export default function ManifestList({
                             </Button>
                         </HStack>
                     </Box>
-                    {manifestNotEmpty(workingManifest) && (
-                        <ManifestListUIControls
-                            filterCriteria={filterCriteria}
-                            setFilterCriteria={setFilterCriteria}
-                            searchTerm={searchTerm}
-                            setSearchTerm={setSearchTerm}
-                            setAllToProd={setAllToProd}
-                        />
-                    )}
                 </Flex>
             </Box>
         </Box>
