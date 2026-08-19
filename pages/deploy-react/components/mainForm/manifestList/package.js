@@ -119,7 +119,7 @@ const Package = memo(function Package({
             borderRadius="sm"
             px="2"
             py="1"
-            mr="4"
+            mr="1"
             bg="white"
             position="relative"
         >

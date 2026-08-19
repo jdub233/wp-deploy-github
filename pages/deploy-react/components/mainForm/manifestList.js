@@ -167,7 +167,21 @@ export default function ManifestList({
                     </Box>
                 ) : null}
                 <Flex align="flex-start">
-                    <Box flex="1" position="relative">
+                    {/* The facet rail leads the list: it scopes what follows, and putting it
+                        first also makes DOM/tab order match reading order. */}
+                    {manifestNotEmpty(workingManifest) && (
+                        <ManifestListUIControls
+                            typeFilter={typeFilter}
+                            setTypeFilter={setTypeFilter}
+                            statusFilter={statusFilter}
+                            setStatusFilter={setStatusFilter}
+                            counts={counts}
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            setAllToProd={setAllToProd}
+                        />
+                    )}
+                    <Box flex="1" minWidth="0" position="relative">
                         {manifestNotEmpty(workingManifest) && (
                             <Flex align="baseline" justify="space-between" mb="5" mx="1" gap="4">
                                 <Text fontSize="xl" fontWeight="semibold" fontFamily="heading">Working manifest</Text>
@@ -225,18 +239,6 @@ export default function ManifestList({
                             </Button>
                         </HStack>
                     </Box>
-                    {manifestNotEmpty(workingManifest) && (
-                        <ManifestListUIControls
-                            typeFilter={typeFilter}
-                            setTypeFilter={setTypeFilter}
-                            statusFilter={statusFilter}
-                            setStatusFilter={setStatusFilter}
-                            counts={counts}
-                            searchTerm={searchTerm}
-                            setSearchTerm={setSearchTerm}
-                            setAllToProd={setAllToProd}
-                        />
-                    )}
                 </Flex>
             </Box>
         </Box>

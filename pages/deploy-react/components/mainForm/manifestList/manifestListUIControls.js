@@ -72,7 +72,7 @@ export default function ManifestListUIControls({
     ];
 
     return (
-        <VStack align="stretch" flexShrink={0} width="260px" pl="6" pr="2.5" mt="12" gap="6">
+        <VStack align="stretch" flexShrink={0} width="260px" pl="2.5" pr="6" mt="12" gap="6">
             <Input
                 type="search"
                 placeholder="Search..."
