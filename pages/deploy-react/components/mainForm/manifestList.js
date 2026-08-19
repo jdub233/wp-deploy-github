@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback, useDeferredValue } from 'react';
 import { Box, Flex, Text, Input, Button, HStack, Spinner, VStack } from "@chakra-ui/react";
 import { NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { toaster } from "../../../../components/ui/toaster";
@@ -94,16 +94,30 @@ export default function ManifestList({
         return { type, status, starred };
     }, [workingManifest, kindById, prodById, favorites]);
 
+    // The facet state above stays immediate so buttons highlight the moment they're clicked;
+    // the list derives from deferred copies, so re-rendering several hundred rows happens at
+    // low priority and can be interrupted instead of blocking the click.
+    const deferredTypeFilter = useDeferredValue(typeFilter);
+    const deferredStatusFilter = useDeferredValue(statusFilter);
+    const deferredStarredOnly = useDeferredValue(starredOnly);
+    const deferredSearchTerm = useDeferredValue(searchTerm);
+
+    const isFiltering =
+        typeFilter !== deferredTypeFilter ||
+        statusFilter !== deferredStatusFilter ||
+        starredOnly !== deferredStarredOnly ||
+        searchTerm !== deferredSearchTerm;
+
     // Type, status, and search compose. Note the behaviour change from the previous
     // implementation: search used to replace the active filter, and now narrows within it.
     const visibleManifest = useMemo(() => {
-        const search = searchTerm.trim().toLowerCase();
+        const search = deferredSearchTerm.trim().toLowerCase();
         return workingManifest
-            .filter(item => !starredOnly || favorites.has(item.id))
-            .filter(item => typeFilter === 'all' || kindById.get(item.id) === typeFilter)
-            .filter(item => matchesStatus(statusFilter, item, prodById.get(item.id)))
+            .filter(item => !deferredStarredOnly || favorites.has(item.id))
+            .filter(item => deferredTypeFilter === 'all' || kindById.get(item.id) === deferredTypeFilter)
+            .filter(item => matchesStatus(deferredStatusFilter, item, prodById.get(item.id)))
             .filter(item => !search || item.id.toLowerCase().includes(search));
-    }, [workingManifest, typeFilter, statusFilter, starredOnly, favorites, searchTerm, kindById, prodById]);
+    }, [workingManifest, deferredTypeFilter, deferredStatusFilter, deferredStarredOnly, favorites, deferredSearchTerm, kindById, prodById]);
 
     function setAllToProd() {
         setWorkingManifest(prodManifest);
@@ -223,17 +237,25 @@ export default function ManifestList({
                                 </Text>
                             </Flex>
                         )}
-                        <Box maxHeight="600px" overflowY="auto" overflowX="hidden">
+                        {/* Dim while the deferred list catches up. No spinner and no delay
+                            threshold -- once rendering commits within a frame, isFiltering is
+                            never true long enough to see. */}
+                        <Box
+                            maxHeight="600px"
+                            overflowY="auto"
+                            overflowX="hidden"
+                            opacity={isFiltering ? 0.6 : 1}
+                            transition="opacity 0.12s ease-out"
+                        >
                             {manifestNotEmpty(workingManifest) && visibleManifest.map((manifestItem) => (
                                 <Package
                                     key={manifestItem.id}
                                     manifestItem={manifestItem}
                                     kind={kindById.get(manifestItem.id)}
+                                    prodPackage={prodById.get(manifestItem.id)}
                                     isStarred={favorites.has(manifestItem.id)}
                                     onToggleStar={toggleFavorite}
                                     setWorkingManifest={setWorkingManifest}
-                                    prodManifest={prodManifest}
-                                    devlManifest={devlManifest}
                                 />
                             ))}
                             {manifestNotEmpty(workingManifest) && visibleManifest.length === 0 && (
