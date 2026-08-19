@@ -1,28 +1,20 @@
-import { useEffect, useState, memo } from 'react';
-import Image from 'next/image';
-import { Badge, Box, Flex, Input, Popover, Portal, Spacer, Stack, Button, Text, IconButton } from "@chakra-ui/react";
+import { useState, memo } from 'react';
+import { Badge, Box, Flex, Image, Input, Popover, Portal, Spacer, Stack, Button, Text, IconButton } from "@chakra-ui/react";
 
+// prodPackage is resolved by the parent from its prodById Map rather than found here. Doing
+// the lookup per row was O(n^2) across the list, and doing it in an effect meant every row
+// rendered twice and flashed red before the real comparison landed.
 const Package = memo(function Package({
     manifestItem,
     kind,
+    prodPackage,
+    isStarred = false,
+    onToggleStar,
     setWorkingManifest,
-    prodManifest,
-    devlManifest,
 }) {
     const [expanded, setExpanded] = useState(false);
-    const [starred, setStarred] = useState(false);
     const [repoTags, setRepoTags] = useState({});
-    const [referenceProdPackage, setReferenceProdPackage] = useState({});
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
-    useEffect(() => {
-        if(typeof window !== "undefined") {
-            const findReferenceProdPackage = () => {
-                setReferenceProdPackage(prodManifest.find((prodPackage) => prodPackage.id === manifestItem.id));
-            };
-            findReferenceProdPackage();
-        }
-    }, [prodManifest, manifestItem]);
 
     function updateManifestItem(updatedItem) {
         setWorkingManifest(currentManifest =>
@@ -86,12 +78,8 @@ const Package = memo(function Package({
         }
     };
 
-    const toggleStar = () => {
-        setStarred(!starred);
-    };
-
     function setPackageToProd() {
-        const updatedItem = { ...manifestItem, ...referenceProdPackage };
+        const updatedItem = { ...manifestItem, ...prodPackage };
         updateManifestItem(updatedItem);
     }
 
@@ -109,7 +97,9 @@ const Package = memo(function Package({
 
     if (!manifestItem) return null;
 
-    const isOldVersion = !referenceProdPackage || referenceProdPackage?.rev !== manifestItem.rev;
+    // Correct on the first render now that prodPackage arrives as a prop -- it used to
+    // start as {} and settle after an effect, which flashed every row red on mount.
+    const isOldVersion = !prodPackage || prodPackage.rev !== manifestItem.rev;
 
     return (
         <Box
@@ -136,34 +126,38 @@ const Package = memo(function Package({
                     variant="ghost"
                     flexShrink={0}
                 >
-                    <Text as="span" fontSize="2xs">{expanded ? <>&#x25BC;</> : <>&#x25B6;</>}</Text>
+                    <Text as="span" fontSize="sm" lineHeight="1">{expanded ? <>&#x25BC;</> : <>&#x25B6;</>}</Text>
                 </IconButton>
-                <Box flexShrink={0} lineHeight="0">
-                    <Image
-                        src={manifestItem.scm === 'git' ? '/git.png' : '/svn.png'}
-                        alt={manifestItem.scm === 'git' ? 'Git' : 'SVN'}
-                        width={18}
-                        height={18}
-                    />
-                </Box>
+                {/* Chakra's Image, not next/image: at 18px the srcset and lazy-load
+                    machinery buys nothing and cost 276 component instances. boxSize is an
+                    explicit px value so the row height never depends on image load. */}
+                <Image
+                    src={manifestItem.scm === 'git' ? '/git.png' : '/svn.png'}
+                    alt={manifestItem.scm === 'git' ? 'Git' : 'SVN'}
+                    boxSize="18px"
+                    flexShrink={0}
+                />
                 <IconButton
                     type="button"
-                    aria-label={starred ? `Unstar ${manifestItem.id}` : `Star ${manifestItem.id}`}
-                    aria-pressed={starred}
-                    onClick={toggleStar}
+                    aria-label={isStarred ? `Unstar ${manifestItem.id}` : `Star ${manifestItem.id}`}
+                    aria-pressed={isStarred}
+                    onClick={() => onToggleStar?.(manifestItem.id)}
                     size="xs"
                     variant="ghost"
                     flexShrink={0}
                 >
-                    <Text as="span" fontSize="md">{starred ? <>&#9733;</> : <>&#9734;</>}</Text>
+                    <Text as="span" fontSize="md" color={isStarred ? "yellow.500" : "gray.400"}>
+                        {isStarred ? <>&#9733;</> : <>&#9734;</>}
+                    </Text>
                 </IconButton>
                 <Text
                     minW="0"
                     flex="0 1 auto"
                     truncate
-                    fontSize="sm"
+                    fontSize="md"
                     fontWeight="semibold"
                     fontFamily="heading"
+                    lineHeight="short"
                     color={isOldVersion ? "red.600" : "inherit"}
                 >
                     {manifestItem.id}
@@ -180,8 +174,8 @@ const Package = memo(function Package({
                 <Text fontSize="xs" fontFamily="mono" color="gray.600" flexShrink={0} whiteSpace="nowrap">
                     {manifestItem.rev.substr(0, 7)}
                     {/* Non-colour cue for "differs from prod", so red text is not the only signal. */}
-                    {referenceProdPackage?.rev && referenceProdPackage.rev !== manifestItem.rev && (
-                        <Text as="span" color="red.600"> &ne; {referenceProdPackage.rev.substr(0, 7)}</Text>
+                    {prodPackage?.rev && prodPackage.rev !== manifestItem.rev && (
+                        <Text as="span" color="red.600"> &ne; {prodPackage.rev.substr(0, 7)}</Text>
                     )}
                 </Text>
             </Flex>
@@ -343,7 +337,7 @@ const Package = memo(function Package({
                             value={manifestItem.rev}
                         />
                         {isOldVersion && (
-                            referenceProdPackage ? (
+                            prodPackage ? (
                                 <Button
                                     type="button"
                                     variant="plain"

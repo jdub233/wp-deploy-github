@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
-import { Box, Flex, Text, Input, Button, HStack, Spinner, VStack } from "@chakra-ui/react";
+import { useState, useMemo, useEffect, useRef, useCallback, useDeferredValue } from 'react';
+import { Box, Flex, Text, Input, Button, HStack, Link, Spinner, VStack } from "@chakra-ui/react";
 import { NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { toaster } from "../../../../components/ui/toaster";
 import { kindOf, matchesStatus, KIND_ORDER } from "../../../../lib/packageKind";
+import { readFavorites, writeFavorites } from "../../../../lib/favorites";
 
 import Package from "./manifestList/package";
 import ManifestListUIControls from "./manifestList/manifestListUIControls";
@@ -20,9 +21,31 @@ export default function ManifestList({
 
     const [typeFilter, setTypeFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('any');
+    const [starredOnly, setStarredOnly] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [newPackageId, setNewPackageId] = useState('');
     const [newPackageScm, setNewPackageScm] = useState('');
+
+    const [favorites, setFavorites] = useState(() => new Set());
+
+    useEffect(() => {
+        setFavorites(new Set(readFavorites()));
+    }, []);
+
+    // The ref keeps toggleFavorite's identity stable, so starring one package re-renders
+    // that row instead of all several hundred. Persisting here rather than in an effect
+    // keyed on `favorites` avoids the mount-order trap where the effect would fire with the
+    // empty initial set and overwrite stored favorites before the load effect lands.
+    const favoritesRef = useRef(favorites);
+    favoritesRef.current = favorites;
+
+    const toggleFavorite = useCallback((id) => {
+        const next = new Set(favoritesRef.current);
+        if (next.has(id)) next.delete(id); else next.add(id);
+        favoritesRef.current = next;
+        setFavorites(next);
+        writeFavorites(next);
+    }, []);
 
     function manifestNotEmpty(workingManifest) {
         if (typeof window !== "undefined") {
@@ -53,6 +76,10 @@ export default function ManifestList({
 
         const status = { any: workingManifest.length, outdated: 0, notInProd: 0 };
 
+        // Counted over the current manifest only. Favorites for packages absent from this
+        // manifest are kept in storage but are deliberately not counted here.
+        let starred = 0;
+
         workingManifest.forEach(item => {
             const kind = kindById.get(item.id);
             type[kind] = (type[kind] || 0) + 1;
@@ -60,20 +87,37 @@ export default function ManifestList({
             const prodPackage = prodById.get(item.id);
             if (matchesStatus('outdated', item, prodPackage)) status.outdated += 1;
             if (matchesStatus('notInProd', item, prodPackage)) status.notInProd += 1;
+
+            if (favorites.has(item.id)) starred += 1;
         });
 
-        return { type, status };
-    }, [workingManifest, kindById, prodById]);
+        return { type, status, starred };
+    }, [workingManifest, kindById, prodById, favorites]);
+
+    // The facet state above stays immediate so buttons highlight the moment they're clicked;
+    // the list derives from deferred copies, so re-rendering several hundred rows happens at
+    // low priority and can be interrupted instead of blocking the click.
+    const deferredTypeFilter = useDeferredValue(typeFilter);
+    const deferredStatusFilter = useDeferredValue(statusFilter);
+    const deferredStarredOnly = useDeferredValue(starredOnly);
+    const deferredSearchTerm = useDeferredValue(searchTerm);
+
+    const isFiltering =
+        typeFilter !== deferredTypeFilter ||
+        statusFilter !== deferredStatusFilter ||
+        starredOnly !== deferredStarredOnly ||
+        searchTerm !== deferredSearchTerm;
 
     // Type, status, and search compose. Note the behaviour change from the previous
     // implementation: search used to replace the active filter, and now narrows within it.
     const visibleManifest = useMemo(() => {
-        const search = searchTerm.trim().toLowerCase();
+        const search = deferredSearchTerm.trim().toLowerCase();
         return workingManifest
-            .filter(item => typeFilter === 'all' || kindById.get(item.id) === typeFilter)
-            .filter(item => matchesStatus(statusFilter, item, prodById.get(item.id)))
+            .filter(item => !deferredStarredOnly || favorites.has(item.id))
+            .filter(item => deferredTypeFilter === 'all' || kindById.get(item.id) === deferredTypeFilter)
+            .filter(item => matchesStatus(deferredStatusFilter, item, prodById.get(item.id)))
             .filter(item => !search || item.id.toLowerCase().includes(search));
-    }, [workingManifest, typeFilter, statusFilter, searchTerm, kindById, prodById]);
+    }, [workingManifest, deferredTypeFilter, deferredStatusFilter, deferredStarredOnly, favorites, deferredSearchTerm, kindById, prodById]);
 
     function setAllToProd() {
         setWorkingManifest(prodManifest);
@@ -141,7 +185,7 @@ export default function ManifestList({
                 >
                     2
                 </Box>
-                <Text fontSize="lg" fontWeight="bold" textTransform="uppercase">Manifest Packages</Text>
+                <Text as="h2" fontSize="lg" fontWeight="bold" textTransform="uppercase">Manifest Packages</Text>
             </Flex>
             <Text fontSize="sm" color="gray.600" mb="5" ml="9">
                 Make any adjustments or modifications to the manifest file to fine-tune this build.
@@ -175,6 +219,8 @@ export default function ManifestList({
                             setTypeFilter={setTypeFilter}
                             statusFilter={statusFilter}
                             setStatusFilter={setStatusFilter}
+                            starredOnly={starredOnly}
+                            setStarredOnly={setStarredOnly}
                             counts={counts}
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm}
@@ -184,22 +230,51 @@ export default function ManifestList({
                     <Box flex="1" minWidth="0" position="relative">
                         {manifestNotEmpty(workingManifest) && (
                             <Flex align="baseline" justify="space-between" mb="5" mx="1" gap="4">
-                                <Text fontSize="xl" fontWeight="semibold" fontFamily="heading">Working manifest</Text>
-                                <Text fontSize="xs" color="gray.600">
+                                <Text as="h3" fontSize="xl" fontWeight="semibold" fontFamily="heading">Working manifest</Text>
+                                <Text fontSize="xs" color="gray.600" aria-live="polite">
                                     Showing {visibleManifest.length} of {workingManifest.length}. Filters affect
                                     this view only &mdash; validation always compares the whole manifest.
                                 </Text>
                             </Flex>
                         )}
-                        <Box maxHeight="600px" overflowY="auto" overflowX="hidden">
+                        {manifestNotEmpty(workingManifest) && (
+                            <Link
+                                href="#add-package"
+                                position="absolute"
+                                left="1"
+                                top="1"
+                                zIndex="1"
+                                px="3"
+                                py="2"
+                                bg="white"
+                                fontSize="sm"
+                                borderWidth="1px"
+                                borderColor="cyan.700"
+                                borderRadius="sm"
+                                opacity="0"
+                                pointerEvents="none"
+                                _focusVisible={{ opacity: 1, pointerEvents: "auto" }}
+                            >
+                                Skip package list ({visibleManifest.length} packages)
+                            </Link>
+                        )}
+                        {/* Dim while the deferred list catches up. */}
+                        <Box
+                            maxHeight="600px"
+                            overflowY="auto"
+                            overflowX="hidden"
+                            opacity={isFiltering ? 0.6 : 1}
+                            transition="opacity 0.12s ease-out"
+                        >
                             {manifestNotEmpty(workingManifest) && visibleManifest.map((manifestItem) => (
                                 <Package
                                     key={manifestItem.id}
                                     manifestItem={manifestItem}
                                     kind={kindById.get(manifestItem.id)}
+                                    prodPackage={prodById.get(manifestItem.id)}
+                                    isStarred={favorites.has(manifestItem.id)}
+                                    onToggleStar={toggleFavorite}
                                     setWorkingManifest={setWorkingManifest}
-                                    prodManifest={prodManifest}
-                                    devlManifest={devlManifest}
                                 />
                             ))}
                             {manifestNotEmpty(workingManifest) && visibleManifest.length === 0 && (
@@ -210,10 +285,11 @@ export default function ManifestList({
                                 </Box>
                             )}
                         </Box>
-                        <HStack mt="10" mb="6" gap="2">
+                        <HStack id="add-package" tabIndex={-1} outline="none" mt="10" mb="6" gap="2">
                             <Input
                                 size="sm"
                                 placeholder="Package ID"
+                                aria-label="New package ID"
                                 value={newPackageId}
                                 onChange={(e) => setNewPackageId(e.target.value)}
                                 width="200px"
