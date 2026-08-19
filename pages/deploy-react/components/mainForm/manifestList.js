@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback, useDeferredValue } from 'react';
-import { Box, Flex, Text, Input, Button, HStack, Spinner, VStack } from "@chakra-ui/react";
+import { Box, Flex, Text, Input, Button, HStack, Link, Spinner, VStack } from "@chakra-ui/react";
 import { NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { toaster } from "../../../../components/ui/toaster";
 import { kindOf, matchesStatus, KIND_ORDER } from "../../../../lib/packageKind";
@@ -185,7 +185,7 @@ export default function ManifestList({
                 >
                     2
                 </Box>
-                <Text fontSize="lg" fontWeight="bold" textTransform="uppercase">Manifest Packages</Text>
+                <Text as="h2" fontSize="lg" fontWeight="bold" textTransform="uppercase">Manifest Packages</Text>
             </Flex>
             <Text fontSize="sm" color="gray.600" mb="5" ml="9">
                 Make any adjustments or modifications to the manifest file to fine-tune this build.
@@ -230,16 +230,35 @@ export default function ManifestList({
                     <Box flex="1" minWidth="0" position="relative">
                         {manifestNotEmpty(workingManifest) && (
                             <Flex align="baseline" justify="space-between" mb="5" mx="1" gap="4">
-                                <Text fontSize="xl" fontWeight="semibold" fontFamily="heading">Working manifest</Text>
-                                <Text fontSize="xs" color="gray.600">
+                                <Text as="h3" fontSize="xl" fontWeight="semibold" fontFamily="heading">Working manifest</Text>
+                                <Text fontSize="xs" color="gray.600" aria-live="polite">
                                     Showing {visibleManifest.length} of {workingManifest.length}. Filters affect
                                     this view only &mdash; validation always compares the whole manifest.
                                 </Text>
                             </Flex>
                         )}
-                        {/* Dim while the deferred list catches up. No spinner and no delay
-                            threshold -- once rendering commits within a frame, isFiltering is
-                            never true long enough to see. */}
+                        {manifestNotEmpty(workingManifest) && (
+                            <Link
+                                href="#add-package"
+                                position="absolute"
+                                left="1"
+                                top="1"
+                                zIndex="1"
+                                px="3"
+                                py="2"
+                                bg="white"
+                                fontSize="sm"
+                                borderWidth="1px"
+                                borderColor="cyan.700"
+                                borderRadius="sm"
+                                opacity="0"
+                                pointerEvents="none"
+                                _focusVisible={{ opacity: 1, pointerEvents: "auto" }}
+                            >
+                                Skip package list ({visibleManifest.length} packages)
+                            </Link>
+                        )}
+                        {/* Dim while the deferred list catches up. */}
                         <Box
                             maxHeight="600px"
                             overflowY="auto"
@@ -266,10 +285,11 @@ export default function ManifestList({
                                 </Box>
                             )}
                         </Box>
-                        <HStack mt="10" mb="6" gap="2">
+                        <HStack id="add-package" tabIndex={-1} outline="none" mt="10" mb="6" gap="2">
                             <Input
                                 size="sm"
                                 placeholder="Package ID"
+                                aria-label="New package ID"
                                 value={newPackageId}
                                 onChange={(e) => setNewPackageId(e.target.value)}
                                 width="200px"

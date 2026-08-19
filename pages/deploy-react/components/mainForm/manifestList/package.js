@@ -126,7 +126,7 @@ const Package = memo(function Package({
                     variant="ghost"
                     flexShrink={0}
                 >
-                    <Text as="span" fontSize="2xs">{expanded ? <>&#x25BC;</> : <>&#x25B6;</>}</Text>
+                    <Text as="span" fontSize="sm" lineHeight="1">{expanded ? <>&#x25BC;</> : <>&#x25B6;</>}</Text>
                 </IconButton>
                 {/* Chakra's Image, not next/image: at 18px the srcset and lazy-load
                     machinery buys nothing and cost 276 component instances. boxSize is an
@@ -146,7 +146,7 @@ const Package = memo(function Package({
                     variant="ghost"
                     flexShrink={0}
                 >
-                    <Text as="span" fontSize="md" color={isStarred ? "yellow.500" : "inherit"}>
+                    <Text as="span" fontSize="md" color={isStarred ? "yellow.500" : "gray.400"}>
                         {isStarred ? <>&#9733;</> : <>&#9734;</>}
                     </Text>
                 </IconButton>
@@ -154,9 +154,10 @@ const Package = memo(function Package({
                     minW="0"
                     flex="0 1 auto"
                     truncate
-                    fontSize="sm"
+                    fontSize="md"
                     fontWeight="semibold"
                     fontFamily="heading"
+                    lineHeight="short"
                     color={isOldVersion ? "red.600" : "inherit"}
                 >
                     {manifestItem.id}

@@ -226,7 +226,7 @@ export default function MainForm() {
                         >
                             1
                         </Box>
-                        <Text fontSize="lg" fontWeight="bold" textTransform="uppercase">Parameters</Text>
+                        <Text as="h2" fontSize="lg" fontWeight="bold" textTransform="uppercase">Parameters</Text>
                     </Flex>
                     <Text fontSize="sm" color="gray.600" mb="5" ml="9">
                         Configure the build details by selecting an environment and the install locations.
