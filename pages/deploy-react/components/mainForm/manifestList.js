@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Box, Flex, Text, Input, Button, HStack, Spinner, VStack } from "@chakra-ui/react";
 import { NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { toaster } from "../../../../components/ui/toaster";
 import { kindOf, matchesStatus, KIND_ORDER } from "../../../../lib/packageKind";
+import { readFavorites, writeFavorites } from "../../../../lib/favorites";
 
 import Package from "./manifestList/package";
 import ManifestListUIControls from "./manifestList/manifestListUIControls";
@@ -20,9 +21,31 @@ export default function ManifestList({
 
     const [typeFilter, setTypeFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('any');
+    const [starredOnly, setStarredOnly] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [newPackageId, setNewPackageId] = useState('');
     const [newPackageScm, setNewPackageScm] = useState('');
+
+    const [favorites, setFavorites] = useState(() => new Set());
+
+    useEffect(() => {
+        setFavorites(new Set(readFavorites()));
+    }, []);
+
+    // The ref keeps toggleFavorite's identity stable, so starring one package re-renders
+    // that row instead of all several hundred. Persisting here rather than in an effect
+    // keyed on `favorites` avoids the mount-order trap where the effect would fire with the
+    // empty initial set and overwrite stored favorites before the load effect lands.
+    const favoritesRef = useRef(favorites);
+    favoritesRef.current = favorites;
+
+    const toggleFavorite = useCallback((id) => {
+        const next = new Set(favoritesRef.current);
+        if (next.has(id)) next.delete(id); else next.add(id);
+        favoritesRef.current = next;
+        setFavorites(next);
+        writeFavorites(next);
+    }, []);
 
     function manifestNotEmpty(workingManifest) {
         if (typeof window !== "undefined") {
@@ -53,6 +76,10 @@ export default function ManifestList({
 
         const status = { any: workingManifest.length, outdated: 0, notInProd: 0 };
 
+        // Counted over the current manifest only. Favorites for packages absent from this
+        // manifest are kept in storage but are deliberately not counted here.
+        let starred = 0;
+
         workingManifest.forEach(item => {
             const kind = kindById.get(item.id);
             type[kind] = (type[kind] || 0) + 1;
@@ -60,20 +87,23 @@ export default function ManifestList({
             const prodPackage = prodById.get(item.id);
             if (matchesStatus('outdated', item, prodPackage)) status.outdated += 1;
             if (matchesStatus('notInProd', item, prodPackage)) status.notInProd += 1;
+
+            if (favorites.has(item.id)) starred += 1;
         });
 
-        return { type, status };
-    }, [workingManifest, kindById, prodById]);
+        return { type, status, starred };
+    }, [workingManifest, kindById, prodById, favorites]);
 
     // Type, status, and search compose. Note the behaviour change from the previous
     // implementation: search used to replace the active filter, and now narrows within it.
     const visibleManifest = useMemo(() => {
         const search = searchTerm.trim().toLowerCase();
         return workingManifest
+            .filter(item => !starredOnly || favorites.has(item.id))
             .filter(item => typeFilter === 'all' || kindById.get(item.id) === typeFilter)
             .filter(item => matchesStatus(statusFilter, item, prodById.get(item.id)))
             .filter(item => !search || item.id.toLowerCase().includes(search));
-    }, [workingManifest, typeFilter, statusFilter, searchTerm, kindById, prodById]);
+    }, [workingManifest, typeFilter, statusFilter, starredOnly, favorites, searchTerm, kindById, prodById]);
 
     function setAllToProd() {
         setWorkingManifest(prodManifest);
@@ -175,6 +205,8 @@ export default function ManifestList({
                             setTypeFilter={setTypeFilter}
                             statusFilter={statusFilter}
                             setStatusFilter={setStatusFilter}
+                            starredOnly={starredOnly}
+                            setStarredOnly={setStarredOnly}
                             counts={counts}
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm}
@@ -197,6 +229,8 @@ export default function ManifestList({
                                     key={manifestItem.id}
                                     manifestItem={manifestItem}
                                     kind={kindById.get(manifestItem.id)}
+                                    isStarred={favorites.has(manifestItem.id)}
+                                    onToggleStar={toggleFavorite}
                                     setWorkingManifest={setWorkingManifest}
                                     prodManifest={prodManifest}
                                     devlManifest={devlManifest}

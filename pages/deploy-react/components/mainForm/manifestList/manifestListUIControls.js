@@ -30,6 +30,37 @@ function FacetButton({ label, count, active, onClick }) {
     );
 }
 
+// Starred is on/off, unlike the one-of-N type and status facets, so it gets its own
+// treatment rather than the facet buttons' cyan left bar.
+function StarredToggle({ active, count, onClick }) {
+    return (
+        <Button
+            type="button"
+            variant="ghost"
+            onClick={onClick}
+            aria-pressed={active}
+            width="full"
+            justifyContent="space-between"
+            fontSize="sm"
+            fontWeight="normal"
+            borderRadius="sm"
+            py="5"
+            bg={active ? "yellow.50" : "white"}
+            border="1px solid"
+            borderColor={active ? "yellow.400" : "gray.300"}
+            _hover={{ bg: "yellow.50", borderColor: "yellow.400" }}
+        >
+            <Text as="span" truncate>
+                <Text as="span" color="yellow.500" mr="2">{active ? <>&#9733;</> : <>&#9734;</>}</Text>
+                Starred only
+            </Text>
+            <Text as="span" fontSize="xs" color="gray.600" fontVariantNumeric="tabular-nums">
+                {count}
+            </Text>
+        </Button>
+    );
+}
+
 function FacetGroup({ heading, children }) {
     return (
         <Box>
@@ -57,7 +88,9 @@ export default function ManifestListUIControls({
     setTypeFilter,
     statusFilter = 'any',
     setStatusFilter,
-    counts = { type: {}, status: {} },
+    starredOnly = false,
+    setStarredOnly,
+    counts = { type: {}, status: {}, starred: 0 },
     searchTerm = '',
     setSearchTerm,
     setAllToProd,
@@ -81,6 +114,12 @@ export default function ManifestListUIControls({
                 onChange={e => setSearchTerm(e.target.value)}
                 bg="white"
                 borderRadius="sm"
+            />
+
+            <StarredToggle
+                active={starredOnly}
+                count={counts.starred}
+                onClick={() => setStarredOnly(!starredOnly)}
             />
 
             <FacetGroup heading="Type">

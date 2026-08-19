@@ -5,12 +5,13 @@ import { Badge, Box, Flex, Input, Popover, Portal, Spacer, Stack, Button, Text, 
 const Package = memo(function Package({
     manifestItem,
     kind,
+    isStarred = false,
+    onToggleStar,
     setWorkingManifest,
     prodManifest,
     devlManifest,
 }) {
     const [expanded, setExpanded] = useState(false);
-    const [starred, setStarred] = useState(false);
     const [repoTags, setRepoTags] = useState({});
     const [referenceProdPackage, setReferenceProdPackage] = useState({});
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -86,10 +87,6 @@ const Package = memo(function Package({
         }
     };
 
-    const toggleStar = () => {
-        setStarred(!starred);
-    };
-
     function setPackageToProd() {
         const updatedItem = { ...manifestItem, ...referenceProdPackage };
         updateManifestItem(updatedItem);
@@ -148,14 +145,16 @@ const Package = memo(function Package({
                 </Box>
                 <IconButton
                     type="button"
-                    aria-label={starred ? `Unstar ${manifestItem.id}` : `Star ${manifestItem.id}`}
-                    aria-pressed={starred}
-                    onClick={toggleStar}
+                    aria-label={isStarred ? `Unstar ${manifestItem.id}` : `Star ${manifestItem.id}`}
+                    aria-pressed={isStarred}
+                    onClick={() => onToggleStar?.(manifestItem.id)}
                     size="xs"
                     variant="ghost"
                     flexShrink={0}
                 >
-                    <Text as="span" fontSize="md">{starred ? <>&#9733;</> : <>&#9734;</>}</Text>
+                    <Text as="span" fontSize="md" color={isStarred ? "yellow.500" : "inherit"}>
+                        {isStarred ? <>&#9733;</> : <>&#9734;</>}
+                    </Text>
                 </IconButton>
                 <Text
                     minW="0"
